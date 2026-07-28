@@ -1,0 +1,1938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NCCER Core Study</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#811a71">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<style data-cochat-base="true">
+/*
+ * CoChat artifact base theme.
+ *
+ * Inlined by `html_document.py:_artifact_renderer` into every HTML artifact's
+ * <head>. The variables are always defined (harmless), the opinionated styles
+ * are gated under `.cochat-base` so they only apply when the LLM opts in by
+ * adding ``class="cochat-base"`` to <body>.
+ *
+ * Sources of truth (kept in sync with):
+ *   src/app.css        — the `.cochat-artifact`-scoped --cc-* tokens
+ *   tailwind.config.js — the cochat color scale
+ *
+ * Dark mode contract:
+ *   The parent posts {type:'darkMode', dark} on iframe load and toggles
+ *   `html.dark` via the listener injected by `_artifact_renderer`. We key the
+ *   dark variables off `html.dark` (authoritative), plus a `prefers-color-
+ *   scheme` fallback for the standalone /artifacts/[id] viewer and the brief
+ *   pre-postMessage window.
+ */
+
+:root {
+    /* Brand */
+    --cc-primary: #811a71;
+    --cc-primary-light: #9e3d8e;
+    --cc-primary-dark: #5e1252;
+    --cc-primary-subtle: rgba(129, 26, 113, 0.08);
+    --cc-secondary: #450077;
+    --cc-accent: #0ea371;
+    --cc-accent-light: #12c98a;
+    --cc-accent-subtle: rgba(14, 163, 113, 0.1);
+
+    /* Neutrals */
+    --cc-gray-50: #f9fafb;
+    --cc-gray-100: #f3f4f6;
+    --cc-gray-200: #e5e7eb;
+    --cc-gray-300: #d1d5db;
+    --cc-gray-400: #9ca3af;
+    --cc-gray-500: #6b7280;
+    --cc-gray-600: #4b5563;
+    --cc-gray-700: #374151;
+    --cc-gray-800: #1f2937;
+    --cc-gray-900: #111827;
+
+    /* Surfaces & text */
+    --cc-surface: #ffffff;
+    --cc-surface-soft: #fafafa;
+    --cc-surface-muted: #f3f4f6;
+    --cc-border: #e5e7eb;
+    --cc-border-strong: #d1d5db;
+    --cc-text: #111827;
+    --cc-text-soft: #4b5563;
+    --cc-text-muted: #6b7280;
+
+    /* Semantic */
+    --cc-success: #16a34a;
+    --cc-warning: #d97706;
+    --cc-danger: #dc2626;
+    --cc-info: #2563eb;
+
+    /* Radius */
+    --cc-radius-xs: 4px;
+    --cc-radius-sm: 6px;
+    --cc-radius-md: 8px;
+    --cc-radius-lg: 12px;
+    --cc-radius-xl: 16px;
+    --cc-radius-pill: 999px;
+
+    /* Shadows */
+    --cc-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --cc-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --cc-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --cc-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --cc-shadow-focus: 0 0 0 3px rgba(129, 26, 113, 0.25);
+
+    /* Typography */
+    --cc-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        'Helvetica Neue', Arial, sans-serif;
+    --cc-font-mono: ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo,
+        Consolas, monospace;
+}
+
+/* Dark mode — authoritative, driven by parent's html.dark toggle */
+html.dark {
+    --cc-primary: #d43ea6;
+    --cc-primary-light: #e87bc5;
+    --cc-primary-dark: #811a71;
+    --cc-primary-subtle: rgba(212, 62, 166, 0.14);
+    --cc-secondary: #9e3d8e;
+    --cc-accent: #12c98a;
+    --cc-accent-light: #34d399;
+    --cc-accent-subtle: rgba(18, 201, 138, 0.14);
+
+    --cc-gray-50: #171717;
+    --cc-gray-100: #262626;
+    --cc-gray-200: #333333;
+    --cc-gray-300: #4e4e4e;
+    --cc-gray-400: #676767;
+    --cc-gray-500: #9b9b9b;
+    --cc-gray-600: #b4b4b4;
+    --cc-gray-700: #cdcdcd;
+    --cc-gray-800: #ececec;
+    --cc-gray-900: #f9f9f9;
+
+    --cc-surface: #262626;
+    --cc-surface-soft: #1f1f1f;
+    --cc-surface-muted: #333333;
+    --cc-border: #2a2a2a;
+    --cc-border-strong: #4e4e4e;
+    --cc-text: #eeeeee;
+    --cc-text-soft: #cdcdcd;
+    --cc-text-muted: #9b9b9b;
+
+    --cc-success: #4ade80;
+    --cc-warning: #fbbf24;
+    --cc-danger: #f87171;
+    --cc-info: #60a5fa;
+
+    --cc-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --cc-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+    --cc-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --cc-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --cc-shadow-focus: 0 0 0 3px rgba(212, 62, 166, 0.35);
+}
+
+/*
+ * System-preference fallback for contexts where the parent hasn't (yet)
+ * posted darkMode — e.g. the standalone /artifacts/[id] viewer or the
+ * first paint before the load handler fires. `html.light` (if ever set)
+ * pins light; `html.dark` (above) pins dark and wins via specificity.
+ */
+@media (prefers-color-scheme: dark) {
+    :root:not(.light):not(.dark) {
+        --cc-primary: #d43ea6;
+        --cc-primary-light: #e87bc5;
+        --cc-primary-dark: #811a71;
+        --cc-primary-subtle: rgba(212, 62, 166, 0.14);
+        --cc-secondary: #9e3d8e;
+        --cc-accent: #12c98a;
+        --cc-accent-light: #34d399;
+        --cc-accent-subtle: rgba(18, 201, 138, 0.14);
+
+        --cc-gray-50: #171717;
+        --cc-gray-100: #262626;
+        --cc-gray-200: #333333;
+        --cc-gray-300: #4e4e4e;
+        --cc-gray-400: #676767;
+        --cc-gray-500: #9b9b9b;
+        --cc-gray-600: #b4b4b4;
+        --cc-gray-700: #cdcdcd;
+        --cc-gray-800: #ececec;
+        --cc-gray-900: #f9f9f9;
+
+        --cc-surface: #262626;
+        --cc-surface-soft: #1f1f1f;
+        --cc-surface-muted: #333333;
+        --cc-border: #2a2a2a;
+        --cc-border-strong: #4e4e4e;
+        --cc-text: #eeeeee;
+        --cc-text-soft: #cdcdcd;
+        --cc-text-muted: #9b9b9b;
+
+        --cc-success: #4ade80;
+        --cc-warning: #fbbf24;
+        --cc-danger: #f87171;
+        --cc-info: #60a5fa;
+    }
+}
+
+/* ============================================================ *
+ *  Opt-in opinionated styles                                   *
+ *  Apply ONLY when <body class="cochat-base"> is present.      *
+ *  Without the class, only the CSS variables above exist —     *
+ *  zero visual effect on styled mockups.                       *
+ * ============================================================ */
+
+.cochat-base,
+.cochat-base *,
+.cochat-base *::before,
+.cochat-base *::after {
+    box-sizing: border-box;
+}
+
+.cochat-base {
+    margin: 0;
+    background: var(--cc-surface);
+    color: var(--cc-text);
+    font-family: var(--cc-font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    accent-color: var(--cc-primary);
+}
+
+/* Headings */
+.cochat-base h1,
+.cochat-base h2,
+.cochat-base h3,
+.cochat-base h4,
+.cochat-base h5,
+.cochat-base h6 {
+    margin: 0 0 0.5em;
+    color: var(--cc-text);
+    font-weight: 600;
+    line-height: 1.25;
+}
+.cochat-base h1 { font-size: 1.5rem; }
+.cochat-base h2 { font-size: 1.25rem; }
+.cochat-base h3 { font-size: 1.125rem; }
+.cochat-base h4 { font-size: 1rem; }
+
+.cochat-base p { margin: 0 0 0.75em; }
+.cochat-base small { color: var(--cc-text-muted); font-size: 0.875em; }
+
+/* Links */
+.cochat-base a {
+    color: var(--cc-primary);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+.cochat-base a:hover { color: var(--cc-primary-light); text-decoration: underline; }
+
+/* Horizontal rule */
+.cochat-base hr {
+    border: 0;
+    border-top: 1px solid var(--cc-border);
+    margin: 1rem 0;
+}
+
+/* Buttons */
+.cochat-base .cc-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--cc-border-strong);
+    border-radius: var(--cc-radius-md);
+    background: var(--cc-surface-soft);
+    color: var(--cc-text);
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+.cochat-base .cc-btn:hover { background: var(--cc-surface-muted); border-color: var(--cc-primary); }
+.cochat-base .cc-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.cochat-base .cc-btn-primary {
+    background: var(--cc-primary);
+    border-color: var(--cc-primary);
+    color: #fff;
+}
+.cochat-base .cc-btn-primary:hover {
+    background: var(--cc-primary-light);
+    border-color: var(--cc-primary-light);
+    color: #fff;
+}
+
+.cochat-base .cc-btn-ghost {
+    background: transparent;
+    border-color: transparent;
+    color: var(--cc-text-soft);
+}
+.cochat-base .cc-btn-ghost:hover {
+    background: var(--cc-primary-subtle);
+    color: var(--cc-primary);
+}
+
+/* Cards & panels */
+.cochat-base .cc-card {
+    background: var(--cc-surface);
+    border: 1px solid var(--cc-border);
+    border-radius: var(--cc-radius-lg);
+    padding: 1rem;
+    box-shadow: var(--cc-shadow-sm);
+}
+.cochat-base .cc-panel {
+    background: var(--cc-surface-soft);
+    border: 1px solid var(--cc-border);
+    border-radius: var(--cc-radius-md);
+    padding: 0.75rem;
+}
+
+/* Inputs */
+.cochat-base .cc-input,
+.cochat-base .cc-select,
+.cochat-base .cc-textarea {
+    width: 100%;
+    padding: 0.5rem 0.7rem;
+    background: var(--cc-surface);
+    color: var(--cc-text);
+    border: 1px solid var(--cc-border-strong);
+    border-radius: var(--cc-radius-md);
+    font: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.cochat-base .cc-input:focus,
+.cochat-base .cc-select:focus,
+.cochat-base .cc-textarea:focus {
+    outline: none;
+    border-color: var(--cc-primary);
+    box-shadow: var(--cc-shadow-focus);
+}
+.cochat-base .cc-textarea { min-height: 5rem; resize: vertical; }
+.cochat-base label { display: inline-block; margin-bottom: 0.25rem; color: var(--cc-text-soft); font-size: 0.875em; }
+
+/* Range slider — brand-tinted thumb in all browsers that support accent-color */
+.cochat-base input[type='range'] { accent-color: var(--cc-primary); }
+
+/* Tables */
+.cochat-base table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375em;
+}
+.cochat-base th,
+.cochat-base td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--cc-border);
+    text-align: left;
+    vertical-align: top;
+}
+.cochat-base th { color: var(--cc-text-soft); font-weight: 600; background: var(--cc-surface-soft); }
+
+/* Code */
+.cochat-base code,
+.cochat-base pre {
+    font-family: var(--cc-font-mono);
+    font-size: 0.875em;
+}
+.cochat-base code {
+    background: var(--cc-surface-muted);
+    color: var(--cc-text);
+    padding: 0.1em 0.35em;
+    border-radius: var(--cc-radius-xs);
+}
+.cochat-base pre {
+    background: var(--cc-surface-muted);
+    color: var(--cc-text);
+    padding: 0.75rem 1rem;
+    border-radius: var(--cc-radius-md);
+    overflow-x: auto;
+}
+.cochat-base pre code { background: transparent; padding: 0; }
+
+/* Focus ring for keyboard users (interactive elements not already covered) */
+.cochat-base :focus-visible {
+    outline: none;
+    box-shadow: var(--cc-shadow-focus);
+    border-radius: var(--cc-radius-sm);
+}
+
+/* Selection */
+.cochat-base ::selection {
+    background: var(--cc-primary-subtle);
+    color: var(--cc-text);
+}
+
+/* Scrollbars (WebKit) — subtle, brand-tinted */
+.cochat-base ::-webkit-scrollbar { width: 10px; height: 10px; }
+.cochat-base ::-webkit-scrollbar-track { background: transparent; }
+.cochat-base ::-webkit-scrollbar-thumb {
+    background: var(--cc-border-strong);
+    border-radius: var(--cc-radius-pill);
+}
+.cochat-base ::-webkit-scrollbar-thumb:hover { background: var(--cc-primary); }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .cochat-base *,
+    .cochat-base *::before,
+    .cochat-base *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>NCCER Core Study App</title>
+<style>
+:root{
+  --bg:#0e1015;--bg-2:#14161c;--surface:#1b1e27;--surface-2:#232735;--border:#2b2f3d;
+  --text:#f2f3f6;--text-dim:#9aa1b3;--text-faint:#5f6678;
+  --orange:#ff7a1a;--orange-dark:#e05e00;--yellow:#ffc93c;--green:#28c76f;--red:#ff5470;
+  --blue:#3d9bfa;--purple:#a06cff;--teal:#36cfc9;--pink:#f368e0;--lime:#9ad84c;--amber:#ffb020;--slate:#8a93a6;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+h1,h2,h3,h4,h5,h6,p,span,div,li,button,a{overflow-wrap:break-word;}
+html,body{height:100%;margin:0;}
+body{font-family:"Roboto","Segoe UI",system-ui,-apple-system,sans-serif;background:#000;color:var(--text);}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh;max-width:480px;margin:0 auto;
+  background:linear-gradient(180deg,#12141b 0%,#0e1015 100%);position:relative;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,.6);}
+.appbar{flex:0 0 auto;position:relative;z-index:5;padding:18px 18px 14px;background:linear-gradient(135deg,#1a1d26 0%,#121319 100%);border-bottom:1px solid var(--border);}
+.appbar .stripe{position:absolute;top:0;left:0;right:0;height:4px;background:repeating-linear-gradient(135deg,var(--orange) 0 14px,var(--yellow) 14px 28px);}
+.appbar-row{display:flex;align-items:center;gap:10px;}
+.appbar h1{margin:0;font-size:1.05rem;font-weight:800;letter-spacing:.2px;line-height:1.2;}
+.appbar p{margin:3px 0 0;font-size:.68rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;}
+.appbar-back{background:none;border:none;color:var(--text);font-size:1.2rem;cursor:pointer;padding:4px 8px 4px 0;}
+.hat{font-size:1.5rem;filter:drop-shadow(0 2px 5px rgba(0,0,0,.5));flex:0 0 auto;}
+.appbar-titlewrap{flex:1;min-width:0;overflow-wrap:break-word;word-break:break-word;}
+.content{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 100px;animation:fadeIn .25s ease;}
+.content::-webkit-scrollbar{width:0;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.bottomnav{position:absolute;left:0;right:0;bottom:0;z-index:10;display:flex;background:rgba(18,20,26,.92);backdrop-filter:blur(14px);border-top:1px solid var(--border);padding:7px 4px calc(7px + env(safe-area-inset-bottom));}
+.navbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:var(--text-faint);font-size:.62rem;font-weight:600;padding:6px 2px;border-radius:12px;cursor:pointer;font-family:inherit;transition:color .15s ease,transform .1s ease;letter-spacing:.02em;}
+.navbtn svg{width:21px;height:21px;stroke:var(--text-faint);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:stroke .15s ease,transform .15s ease;}
+.navbtn.active{color:var(--orange);}
+.navbtn.active svg{stroke:var(--orange);transform:translateY(-2px);}
+.navbtn:active{transform:scale(.92);}
+.section-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-faint);font-weight:700;margin:22px 0 10px;}
+.section-title:first-child{margin-top:0;}
+.hero{background:linear-gradient(135deg,var(--orange) 0%,var(--orange-dark) 100%);border-radius:18px;padding:18px;margin-bottom:18px;position:relative;overflow:hidden;box-shadow:0 10px 24px rgba(255,122,26,.25);}
+.hero::after{content:"";position:absolute;right:-30px;top:-30px;width:140px;height:140px;background:rgba(255,255,255,.12);border-radius:50%;}
+.hero h2{margin:0 0 4px;font-size:1.15rem;font-weight:800;color:#1a1005;}
+.hero p{margin:0;font-size:.8rem;color:#3a2408;font-weight:600;}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:8px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;}
+.ring{width:56px;height:56px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;position:relative;}
+.ring-inner{position:absolute;inset:5px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;}
+.stat-label{font-size:.68rem;color:var(--text-dim);font-weight:600;line-height:1.3;}
+.stat-value{font-size:.95rem;font-weight:800;color:var(--text);}
+.cta-row{display:flex;gap:10px;margin:16px 0 6px;}
+.cta{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:16px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-family:inherit;color:var(--text);}
+.cta span.icon{font-size:1.4rem;}
+.cta span.label{font-size:.72rem;font-weight:700;}
+.cta:active{transform:scale(.97);}
+.mod-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin-bottom:8px;cursor:pointer;}
+.mod-row:active{transform:scale(.99);}
+.mod-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex:0 0 auto;}
+.mod-info{flex:1;min-width:0;}
+.mod-title{font-size:.82rem;font-weight:700;color:var(--text);overflow-wrap:break-word;word-break:break-word;line-height:1.3;}
+.mod-sub{font-size:.68rem;color:var(--text-faint);margin-top:1px;}
+.mod-bar{height:5px;border-radius:99px;background:var(--surface-2);margin-top:6px;overflow:hidden;}
+.mod-bar-fill{height:100%;border-radius:99px;}
+.mod-score{font-size:.68rem;color:var(--text-dim);font-weight:700;text-align:right;flex:0 0 auto;}
+.mod-chevron{color:var(--text-faint);font-size:1rem;flex:0 0 auto;}
+.chiprow{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:6px;}
+.chiprow::-webkit-scrollbar{height:0;}
+.chip{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:99px;background:var(--surface);border:1px solid var(--border);font-size:.72rem;font-weight:700;color:var(--text-dim);cursor:pointer;white-space:nowrap;}
+.chip.active{background:var(--orange);border-color:var(--orange);color:#1a1005;}
+.chip .dot{width:7px;height:7px;border-radius:50%;}
+.progress-track{height:4px;background:var(--surface-2);border-radius:99px;margin-bottom:14px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));border-radius:99px;transition:width .2s ease;}
+.meta-row{display:flex;justify-content:space-between;align-items:center;font-size:.74rem;color:var(--text-dim);font-weight:600;margin-bottom:12px;}
+.flipcard-wrap{perspective:1200px;margin-bottom:16px;}
+.flipcard{position:relative;min-height:230px;border-radius:20px;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,.2,.2,1);cursor:pointer;}
+.flipcard.is-flipped{transform:rotateY(180deg);}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;padding:26px 22px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:1px solid var(--border);}
+.face.front{background:var(--surface);}
+.face.back{background:var(--surface-2);transform:rotateY(180deg);}
+.face .tag{font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;font-weight:800;margin-bottom:12px;padding:4px 10px;border-radius:99px;}
+.face .txt{font-size:1rem;font-weight:600;line-height:1.5;color:var(--text);}
+.face .hint{position:absolute;bottom:12px;font-size:.65rem;color:var(--text-faint);font-weight:600;}
+.ctrl-row{display:flex;justify-content:center;gap:10px;margin-bottom:10px;}
+.btn{border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-weight:700;font-size:.78rem;padding:10px 16px;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.btn:active{transform:scale(.96);}
+.btn-wide{flex:1;justify-content:center;}
+.btn-know{background:var(--green);border-color:var(--green);color:#052e17;}
+.btn-review{background:var(--red);border-color:var(--red);color:#3a0210;}
+.btn-primary{background:var(--orange);border-color:var(--orange);color:#1a1005;}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px;}
+.qtag{display:inline-block;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;font-weight:800;padding:4px 10px;border-radius:99px;margin-bottom:12px;}
+.qtext{font-size:1rem;font-weight:700;margin-bottom:14px;line-height:1.4;}
+.opt{display:block;width:100%;text-align:left;padding:12px 14px;border-radius:12px;background:var(--surface-2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:.85rem;font-weight:600;margin-bottom:8px;cursor:pointer;}
+.opt:active{transform:scale(.99);}
+.opt.correct{background:var(--green);border-color:var(--green);color:#052e17;}
+.opt.wrong{background:var(--red);border-color:var(--red);color:#3a0210;}
+.opt[disabled]{cursor:default;}
+.explain{margin-top:10px;padding:12px 14px;background:var(--surface-2);border-radius:12px;font-size:.8rem;line-height:1.5;color:var(--text-dim);border-left:3px solid var(--orange);}
+.explain b{color:var(--text);}
+.qfooter{display:flex;justify-content:flex-end;margin-top:14px;}
+.exam-card{background:linear-gradient(135deg,var(--surface-2),var(--surface));border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px;}
+.exam-card h3{margin:0 0 10px;font-size:.9rem;}
+.exam-card ul{margin:0;padding-left:18px;font-size:.8rem;line-height:1.9;color:var(--text-dim);}
+.exam-card li b{color:var(--text);}
+.ref-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-left-width:4px;border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;}
+.ref-row:active{transform:scale(.99);}
+.ref-row .mod-icon{width:34px;height:34px;font-size:1rem;}
+.ref-title{font-size:.8rem;font-weight:700;}
+.ref-sub{font-size:.68rem;color:var(--text-faint);margin-top:2px;}
+.footer-links{display:flex;gap:14px;justify-content:center;margin-top:20px;flex-wrap:wrap;}
+.footer-links button{background:none;border:none;color:var(--text-faint);font-size:.7rem;font-weight:700;font-family:inherit;cursor:pointer;text-decoration:underline;}
+.toast{position:absolute;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:var(--surface-2);border:1px solid var(--border);color:var(--text);font-size:.78rem;font-weight:700;padding:10px 18px;border-radius:99px;box-shadow:0 8px 20px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;z-index:20;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.guide-hero{border-radius:18px;padding:18px;margin-bottom:16px;position:relative;overflow:hidden;}
+.guide-hero::after{content:"";position:absolute;right:-30px;top:-30px;width:140px;height:140px;background:rgba(255,255,255,.12);border-radius:50%;}
+.guide-hero h2{margin:0 0 4px;font-size:1.1rem;font-weight:800;color:#0d0d0f;}
+.guide-hero p{margin:0;font-size:.78rem;color:#26232a;font-weight:600;}
+.guide-meta{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap;}
+.guide-meta span{font-size:.68rem;font-weight:800;background:rgba(255,255,255,.35);color:#1a1a1a;padding:4px 10px;border-radius:99px;}
+.guide-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px;}
+.guide-section h4{margin:0 0 10px;font-size:.82rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text-dim);display:flex;align-items:center;gap:6px;}
+.guide-list{margin:0;padding-left:0;list-style:none;}
+.guide-list li{font-size:.86rem;line-height:1.55;color:var(--text);padding:8px 0 8px 20px;position:relative;border-top:1px solid var(--border);}
+.guide-list li:first-child{border-top:none;padding-top:0;}
+.guide-list li:before{content:"\2713";position:absolute;left:0;top:8px;color:var(--orange);font-weight:800;font-size:.75rem;}
+.guide-list li:first-child:before{top:0;}
+.guide-list li b{color:var(--text);}
+.guide-terms{display:flex;flex-wrap:wrap;gap:8px;}
+.term-pill{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-size:.78rem;flex:1 1 130px;}
+.term-pill b{display:block;font-size:.76rem;color:var(--orange);margin-bottom:3px;}
+.guide-para{font-size:.9rem;line-height:1.65;color:var(--text);margin:0 0 12px;}
+.guide-para:last-child{margin-bottom:0;}
+.guide-deepdive{border-left:none;padding:0;}
+.dd-progress-wrap{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.dd-progress-track{flex:1;height:8px;border-radius:5px;background:var(--surface-2);overflow:hidden;}
+.dd-progress-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--orange),var(--green));transition:width .35s ease;}
+.dd-progress-label{font-size:.75rem;font-weight:700;color:var(--text-dim);white-space:nowrap;}
+.deepdive-sub{border-radius:14px;margin-bottom:10px;overflow:hidden;border:2px solid var(--border);transition:border-color .2s ease;}
+.deepdive-sub.is-done{border-color:var(--green);}
+.dd-header{display:flex;align-items:center;gap:10px;padding:12px 12px;cursor:pointer;user-select:none;}
+.dd-badge{flex:0 0 30px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;color:#fff;}
+.dd-header h5{margin:0;font-size:.87rem;font-weight:700;color:var(--text);flex:1;min-width:0;line-height:1.3;overflow-wrap:break-word;word-break:break-word;}
+.dd-check{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:2px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:transparent;cursor:pointer;transition:all .15s ease;}
+.dd-check.checked{background:var(--green);border-color:var(--green);color:#fff;}
+.dd-chevron{flex:0 0 auto;font-size:.8rem;color:var(--text-dim);transition:transform .2s ease;}
+.dd-chevron.open{transform:rotate(90deg);}
+.dd-body{padding:0 14px 14px 14px;display:none;}
+.dd-body.open{display:block;}
+.fact-list{margin:8px 0 0;padding-left:0;list-style:none;}
+.fact-list li{font-size:.85rem;line-height:1.5;color:var(--text);margin-bottom:8px;padding:8px 10px;background:var(--surface-2);border-radius:8px;display:flex;gap:8px;align-items:flex-start;}
+.fact-list li:last-child{margin-bottom:0;}
+.fact-icon{flex:0 0 auto;font-size:.8rem;}
+.fact-text{flex:1;min-width:0;overflow-wrap:break-word;word-break:break-word;}
+.hl-num{color:var(--amber);font-weight:800;overflow-wrap:break-word;}
+.hrs-note{font-size:.72rem;color:var(--text-faint);background:var(--surface-2);border-radius:10px;padding:8px 10px;margin-top:10px;line-height:1.5;}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="appbar">
+    <div class="stripe"></div>
+    <div class="appbar-row">
+      <button class="appbar-back" id="backBtn" style="display:none" onclick="App.goBack()">\u2190</button>
+      <div class="hat" id="appbarHat">\uD83D\uDC77</div>
+      <div class="appbar-titlewrap">
+        <h1 id="appbarTitle">NCCER Core Study</h1>
+        <p id="appbarSub">Intro to Basic Construction Skills \u00b7 6th Ed.</p>
+      </div>
+    </div>
+  </div>
+  <div class="content" id="content"></div>
+  <div class="bottomnav" id="bottomnav"></div>
+  <div class="toast" id="toast"></div>
+  <input type="file" id="importFile" accept="application/json" style="display:none">
+</div>
+<script>
+(function(){
+"use strict";
+
+var MODULES = [
+  {id:"00100", title:"Build Your Future in Construction", hours:2.5, elective:true, icon:"\uD83C\uDFD7\uFE0F", color:"var(--orange)"},
+  {id:"00101", title:"Basic Safety", hours:12.5, elective:false, icon:"\uD83E\uDDBA", color:"var(--red)"},
+  {id:"00102", title:"Introduction to Construction Math", hours:10, elective:false, icon:"\uD83D\uDCD0", color:"var(--blue)"},
+  {id:"00103", title:"Introduction to Hand Tools", hours:12.5, elective:false, icon:"\uD83D\uDD28", color:"var(--yellow)"},
+  {id:"00104", title:"Introduction to Power Tools", hours:10, elective:false, icon:"\uD83D\uDD0C", color:"var(--purple)"},
+  {id:"00105", title:"Introduction to Construction Drawings", hours:10, elective:false, icon:"\uD83D\uDCCB", color:"var(--green)"},
+  {id:"00106", title:"Introduction to Basic Rigging", hours:7.5, elective:true, icon:"\u26D3\uFE0F", color:"var(--amber)"},
+  {id:"00107", title:"Basic Communication Skills", hours:7.5, elective:false, icon:"\uD83D\uDCAC", color:"var(--teal)"},
+  {id:"00108", title:"Basic Employability Skills", hours:7.5, elective:false, icon:"\uD83E\uDD1D", color:"var(--pink)"},
+  {id:"00109", title:"Introduction to Materials Handling", hours:5, elective:false, icon:"\uD83D\uDCE6", color:"var(--lime)"}
+];
+
+function modInfo(id){ for (var i=0;i<MODULES.length;i++){ if(MODULES[i].id===id) return MODULES[i]; } return MODULES[0]; }
+
+// ---- Study guide key notes per module (paraphrased summaries, not textbook text) ----
+var STUDY_GUIDES = {
+ "00100": {
+   overview:"'Build Your Future in Construction' is the official name of this orientation module, and it's built around four Learning Objectives: describing the construction industry itself, explaining the benefits of a construction career, describing the typical career path for craft professionals, and identifying the different ways to actually pursue a career in the field. It's a knowledge-only module with no hands-on Performance Tasks, so the exam focus stays conceptual \u2014 industry outlook, career benefits, progression paths, and entry routes \u2014 rather than procedure or math.",
+   deepDive:[
+     {h:"LO1: The Construction Industry", p:"This objective starts with defining construction itself and summarizing the current and future outlook for construction jobs \u2014 the field is large, in constant demand (buildings, infrastructure, and housing always need building and maintaining), and facing a persistent shortage of skilled workers, which is part of why entry-level positions are relatively easy to find. It also covers some of construction's more prominent historical contributions \u2014 the industry has literally built the bridges, roads, and buildings that define how a society functions, which is part of the case for why it's treated as a serious, respected career path rather than a fallback option.",
+      facts:[
+        "The three main construction sectors are: residential (homes, apartments), commercial/institutional (offices, schools, hospitals), and industrial/infrastructure (roads, bridges, power plants, pipelines).",
+        "The industry has faced a persistent skilled-labor shortage for years, driven by retirements outpacing new entrants \u2014 a major reason entry-level roles are relatively easy to find.",
+        "Construction is cyclical \u2014 tied closely to economic conditions, interest rates, and public infrastructure spending, unlike some steadier service industries."
+      ]},
+     {h:"LO2: Why a Construction Career Pays Off", p:"This objective covers two angles: how construction careers make a difference in the community (literally building the places people live, work, and gather), and the financial and professional benefits of pursuing one \u2014 competitive wages that increase with experience and certification, relatively low barriers to entry compared to careers requiring a four-year degree, and a realistic path to running your own business or supervising others down the line.",
+      facts:[
+        "Apprentices typically earn 40\u201365% of a fully certified journey-worker's wage on day one, with scheduled raises as training periods are completed.",
+        "Most craft training carries little to no student debt compared to a four-year degree, since apprenticeships pay you while you train.",
+        "Skilled trades consistently rank among careers with strong long-term demand because the work (unlike many desk jobs) can't be automated or outsourced overseas."
+      ]},
+     {h:"LO3: Career Path & Craft Options", p:"This objective describes industry sectors and the typical progression path for a construction career \u2014 generally starting as a trainee/helper, moving through apprentice status, reaching journey-level (fully certified, works independently), and potentially advancing into foreman, superintendent, or business ownership. It also covers identifying different construction careers and the specific skills each one requires \u2014 crafts like carpentry, electrical, plumbing, welding, and heavy equipment operation each demand a different skill set, and part of this objective is understanding that breadth so you can identify which path fits your own strengths.",
+      facts:[
+        "Typical progression: Trainee/Helper \u2192 Apprentice (usually 3\u20135 years of paid training) \u2192 Journey-worker (fully certified) \u2192 Foreman/Supervisor \u2192 Superintendent \u2192 possible business owner.",
+        "Craft examples and their core skill emphasis: carpentry (measurement, layout, framing), electrical (code knowledge, troubleshooting), plumbing (piping systems, code compliance), welding (metallurgy, precision), heavy equipment operation (spatial awareness, machine control)."
+      ]},
+     {h:"LO4: How to Get In", p:"This objective covers the practical routes into the industry: career and technical education (CTE) programs, typically offered in high schools or technical schools, that build foundational skills before you enter the workforce; craft training programs and how they connect to formal apprenticeships (paid, structured training combining classroom instruction with on-the-job work, leading to journey-level status); and how community colleges and universities also offer paths into construction, particularly for roles like construction management, estimating, or engineering that sit alongside the hands-on trades.",
+      facts:[
+        "Registered apprenticeships are typically sponsored by an employer, union, or trade association and registered with the U.S. Department of Labor or a state apprenticeship agency.",
+        "NCCER's National Registry tracks completed modules and hours so credentials transfer between employers and states without re-training from scratch.",
+        "Construction management, estimating, and civil engineering degree paths typically sit alongside (not instead of) hands-on craft training, often for supervisory/office-side roles."
+      ]}
+   ],
+   objectives:[
+     "LO1: Define construction and summarize the industry's job outlook and historical contributions.",
+     "LO2: Explain the community, financial, and professional benefits of a construction career.",
+     "LO3: Describe industry sectors, the typical craft-professional progression path, and different careers/skills.",
+     "LO4: Identify ways to pursue a career \u2014 CTE programs, craft training/apprenticeships, and community college/university paths."
+   ],
+   terms:[
+     {t:"NCCER", d:"National Center for Construction Education and Research \u2014 nonprofit that standardizes construction training."},
+     {t:"Registry", d:"National database that tracks and issues your training transcripts and wallet cards."},
+     {t:"Craft professional", d:"A skilled tradesperson (electrician, carpenter, etc.) as opposed to unskilled labor."},
+     {t:"Portability", d:"Credentials/training records that transfer between employers and states."},
+     {t:"Apprenticeship", d:"A structured program pairing paid on-the-job work with related classroom instruction, leading to journey-level status."},
+     {t:"Pre-apprenticeship", d:"An entry-level program that builds basic skills before a candidate enters a formal apprenticeship."},
+     {t:"CTE", d:"Career and Technical Education \u2014 school-based programs building foundational job skills before workforce entry."},
+     {t:"Journey-level", d:"Fully certified status after completing an apprenticeship, able to work independently and train others."}
+   ],
+   examTips:["This module is knowledge-only \u2014 no Performance Tasks \u2014 so focus is conceptual, not procedural.","Know the difference between CTE programs, craft training/apprenticeships, and community college/university paths \u2014 the exam tests telling these apart."],
+   safety:["There are no safety considerations tied to this orientation module \u2014 it's career/industry overview only."],
+   formulas:[]
+ },
+ "00101": {
+   overview:"This is the single most heavily tested module on the real Core exam \u2014 it's officially titled 'Basic Safety (Construction Site Safety Orientation)' and completing it awards a real Construction Site Safety Orientation credential. The module has six Learning Objectives covering the cost and control of workplace hazards, fall hazards, struck-by/caught-in-between hazards, electrical hazards, PPE, and other job-site hazards like fire and confined spaces. There are also four hands-on Performance Tasks: setting up and climbing a ladder with proper three-point contact, inspecting PPE items for safety, properly donning/fitting/removing PPE, and inspecting a power cord and GFCI. Expect exam questions to test judgment calls, not just definitions \u2014 who has authority to declare a hazard fixed, what height triggers fall protection, and which extinguisher class matches which fire.",
+   deepDive:[
+     {h:"LO1: The Real Cost of Job-Site Incidents", p:"This objective starts with why safety matters in dollars and human terms before getting into specific hazards. Workplace incidents carry both physical costs (injury, disability, death) and monetary costs (medical bills, lost productivity, higher insurance premiums, legal liability, project delays) \u2014 and understanding both sides is why safety gets taken seriously rather than treated as a checkbox. The core skill this objective builds is the recognize-evaluate-control cycle: first you have to recognize a hazard actually exists (not always obvious), then evaluate how severe and how likely it is to cause harm, then apply a control measure sized to that risk. This same three-step cycle applies to every hazard type covered later in the module, so it's worth understanding it here first rather than memorizing it as a separate fact.",
+      facts:[
+        "Construction has one of the highest fatality rates of any industry \u2014 roughly 1 in 5 worker deaths nationally happens in construction, despite the industry employing a much smaller share of the workforce.",
+        "Direct costs = medical bills, workers' comp payouts. Indirect costs (often 4\u201310x higher) = lost productivity, retraining, equipment damage, project delays, and legal fees.",
+        "Recognize \u2192 Evaluate \u2192 Control: recognize the hazard exists, evaluate its severity and likelihood, then apply a control sized to that risk \u2014 this exact 3-step order shows up again for every hazard type in this module.",
+        "OSHA's General Duty Clause (Section 5(a)(1) of the OSH Act) requires employers to keep the workplace free of recognized hazards, even where no specific standard exists."
+      ]},
+     {h:"LO2: Fall Hazards & Prevention", p:"Falls are the leading cause of death in construction, and this objective covers four things: recognizing the common types of fall hazards (unprotected edges, floor/wall openings, unstable working surfaces), understanding how a fall arrest system's components work together (anchor point, body harness, connecting device/lanyard) to stop a fall before it becomes fatal, using ladders and stairs safely (maintaining three-point contact \u2014 two hands and a foot, or two feet and a hand, in contact with the ladder at all times), and inspecting/using scaffolds safely, including checking scaffold tags before stepping onto one. The hands-on performance task for this objective has you actually set up, climb, and descend an extension ladder using proper three-point contact \u2014 so this is tested as a physical skill, not just a definition.",
+      facts:[
+        "Fall protection is required at 6 feet or more above a lower level in most construction work (OSHA 29 CFR 1926.501); for steel erection it's 15\u201330 ft depending on the task, and for scaffolds it's 10 feet.",
+        "A Personal Fall Arrest System (PFAS) has 3 parts: anchor point (must support 5,000 lbs per worker attached), full-body harness, and a connecting device (lanyard or self-retracting lifeline).",
+        "Maximum free-fall distance allowed before a PFAS engages is 6 feet; maximum arresting force on the body is 1,800 lbs.",
+        "Ladder setup ratio is 4:1 \u2014 for every 4 feet of height to the support point, the base sits 1 foot out from the wall. Extension ladders must extend at least 3 feet above the landing surface.",
+        "Guardrail systems: top rail height 42 inches \u00b1 3 inches, midrail at roughly half that height, and must withstand 200 lbs of outward force.",
+        "Scaffolds need a competent person's inspection before each shift and a tag system (commonly green=safe to use, yellow=caution/restricted, red=do not use) posted at the access point."
+      ]},
+     {h:"LO3: Struck-By & Caught-In/Between Hazards", p:"Struck-by hazards come from four sources worth knowing separately: falling objects (tools or material dropped from height), flying objects (debris thrown by tools or wind), rolling objects (vehicles and mobile equipment), and swinging objects (loads on a crane or suspended equipment) \u2014 which is why drop zones get barricaded and hard hats matter even when nothing looks dangerous overhead. Caught-in/between hazards cover situations where a worker gets trapped or compressed \u2014 unprotected trench walls collapsing, a body part pulled into unguarded moving machinery, or being pinned between equipment and a fixed object. The prevention approach for both categories is largely the same: keep clear of drop/swing zones, guard moving parts, and never enter an unshored trench.",
+      facts:[
+        "The 4 struck-by sub-types: falling, flying, rolling, and swinging objects \u2014 each needs a different control (toeboards/debris nets for falling, eye protection for flying, spotters/barricades for rolling, tag lines/exclusion zones for swinging).",
+        "Trenches 5 feet deep or greater require a protective system (shoring, shielding, or sloping) unless the excavation is entirely in stable rock (OSHA 29 CFR 1926.652).",
+        "Trenches 20 feet deep or greater require a protective system designed by a registered professional engineer.",
+        "A trench box (shield) protects workers inside it but does NOT prevent a cave-in \u2014 it's designed to give workers a survivable space if one occurs.",
+        "Machine guarding rule: any moving part that can cause injury (belts, gears, blades, rotating shafts) must be guarded per OSHA 29 CFR 1926.300(b)."
+      ]},
+     {h:"LO4: Electrical Hazards & Lockout/Tagout", p:"Basic job-site electrical safety guidelines cover recognizing damaged cords, avoiding contact with overhead power lines, and using GFCI protection in wet or outdoor conditions. This objective also introduces lockout/tagout (LOTO) at a basic level: understanding why disabling/de-energizing equipment before service matters, since stored energy can injure someone even after the power is switched off. The performance task for this objective has you inspect a power cord and a GFCI to determine if they're safe to use \u2014 which means the exam expects you to recognize specific damage signs (cuts, exposed wire, missing ground pin), not just recite the definition of GFCI.",
+      facts:[
+        "GFCIs are required for all 125-volt, single-phase, 15- and 20-amp receptacles on construction sites not part of the permanent wiring (OSHA 29 CFR 1926.404).",
+        "Minimum safe clearance from overhead power lines for cranes/equipment is generally 10 feet for lines up to 50kV, increasing for higher voltages.",
+        "LOTO basic sequence: notify affected workers \u2192 shut down via normal stop procedure \u2192 isolate all energy sources \u2192 apply your own lock/tag (only you can remove it) \u2192 verify zero energy (try the controls) before work begins.",
+        "Cord inspection checklist: no cuts/fraying in the outer jacket, ground pin present and intact, plug/connector body not cracked, no signs of overheating (discoloration) at the plug."
+      ]},
+     {h:"LO5: PPE & Respiratory Protection", p:"This objective is tested heavily as a hands-on skill, not just a knowledge check \u2014 two of the module's four performance tasks come from here. You're expected to inspect PPE items (eye protection, hearing protection, hard hat, gloves, fall arrest harnesses, lanyards, connecting devices, approved footwear) and correctly judge whether each one is safe to use, and to properly don, fit, and remove eye protection, hearing protection, a hard hat, gloves, and a fall arrest harness. The knowledge side covers matching PPE to the specific hazard it protects against, and understanding how respirators protect against respiratory hazards \u2014 different respirator types handle different airborne hazards, so 'wearing a respirator' isn't interchangeable across every situation.",
+      facts:[
+        "Hard hat classes: Class G (general, 2,200V protection), Class E (electrical, 20,000V protection), Class C (conductive, no electrical protection \u2014 comfort/bump protection only).",
+        "Hearing protection is required when noise exposure exceeds 90 dBA averaged over an 8-hour shift (OSHA 29 CFR 1926.52); hearing protectors are typically rated by NRR (Noise Reduction Rating) in dB.",
+        "Hard hats must be replaced after any impact, regardless of visible damage, and generally every 2\u20135 years per manufacturer guidance due to material degradation from UV exposure.",
+        "Respirator types: N95 (filters particulates only, no oil resistance), half-face/full-face cartridge respirators (specific cartridges for specific chemical classes), SCBA (self-contained, for oxygen-deficient or IDLH atmospheres).",
+        "A fall-arrest harness must be inspected before each use for frayed webbing, cracked D-rings, and worn stitching \u2014 any of these means immediate rejection."
+      ]},
+     {h:"LO6: Other Job-Site Hazards", p:"This objective is a catch-all covering four hazard categories not addressed elsewhere: environmental hazards (heat/cold stress, weather exposure) and how to respond to them; hot work hazards (welding, cutting, and other spark/flame-producing tasks); fire hazards and basic firefighting procedures, including matching extinguisher class to fuel type \u2014 Class A (ordinary combustibles like wood/paper), Class B (flammable liquids), Class C (energized electrical equipment), Class D (combustible metals), and Class K (cooking oils); and confined spaces \u2014 knowing the different types and the hazards specific to entering them, since a space can look completely normal and still have unsafe air.",
+      facts:[
+        "Heat illness progression: heat cramps \u2192 heat exhaustion (heavy sweating, weakness, nausea) \u2192 heat stroke (confusion, hot/dry skin, medical emergency \u2014 call 911 immediately).",
+        "Hot work (welding, cutting, grinding sparks) requires a fire watch and removal of combustibles within 35 feet, per NFPA 51B guidelines many job sites follow.",
+        "Extinguisher use follows the PASS technique: Pull the pin, Aim at the base of the fire, Squeeze the handle, Sweep side to side.",
+        "Confined space atmosphere testing order: oxygen level first (safe range 19.5%\u201323.5%), then combustible gases (must stay under 10% of the Lower Explosive Limit), then toxic contaminants.",
+        "A permit-required confined space has one or more of: hazardous atmosphere, engulfment hazard, a shape that could trap/asphyxiate an entrant, or another serious safety/health hazard \u2014 it needs a written entry permit, continuous air monitoring, and an attendant stationed outside."
+      ]}
+   ],
+   objectives:[
+     "LO1: Explain the cost of workplace incidents (physical and monetary) and the recognize-evaluate-control approach to hazards.",
+     "LO2: Describe common fall hazards, fall arrest system components, safe ladder/stair use (three-point contact), and scaffold safety.",
+     "LO3: Recognize struck-by hazards (falling/flying/rolling/swinging objects) and caught-in/between hazards, and how to avoid each.",
+     "LO4: Summarize basic electrical safety guidelines and the importance of disabling equipment (lockout/tagout) before service.",
+     "LO5: Match PPE (eye, hearing, head, hand, fall-arrest, footwear) and respirators to the specific hazards they protect against.",
+     "LO6: Describe safety practices for environmental hazards, hot work, fire hazards/firefighting, and confined spaces."
+   ],
+   terms:[
+     {t:"PPE", d:"Personal Protective Equipment \u2014 gear worn to reduce exposure to hazards."},
+     {t:"SDS", d:"Safety Data Sheet \u2014 hazard/handling info for a chemical product."},
+     {t:"Competent person", d:"Someone who can identify hazards and has authority to correct them."},
+     {t:"Qualified person", d:"Someone with recognized training, credentials, or extensive experience able to resolve problems in a specific subject area."},
+     {t:"LOTO", d:"Lockout/Tagout \u2014 de-energizing equipment before service."},
+     {t:"Confined space", d:"Space with limited entry/exit, not built for continuous occupancy."},
+     {t:"Fatal Four", d:"Falls, struck-by, caught-in/between, electrocution."},
+     {t:"Toolbox talk", d:"A short, routine safety meeting covering one specific hazard or topic."},
+     {t:"Hazard communication (HazCom)", d:"OSHA's framework requiring labeling and SDS access for hazardous chemicals."},
+     {t:"Housekeeping", d:"Keeping work areas free of clutter/debris to prevent trip, slip, and fire hazards."}
+   ],
+   examTips:["Expect the most questions from this module on the real Core exam \u2014 know PPE, fall heights, and the hazard hierarchy cold.","Know WHO can declare a hazard corrected (competent person) vs who can stop work (anyone).","Know the difference between a 'competent person' and a 'qualified person' \u2014 the exam likes to swap these."],
+   safety:[
+     "OSHA 29 CFR 1926.501 (Subpart M): sets the duty-to-have-fall-protection trigger at 6 feet above a lower level on most construction walking/working surfaces.",
+     "OSHA 29 CFR 1926 Subpart E (\u00a71926.95\u2013106): governs PPE hazard assessment and personal protective equipment requirements.",
+     "OSHA Hazard Communication rules (29 CFR 1926.59, aligned to GHS) require SDS access and proper container labeling for hazardous chemicals on site.",
+     "OSHA 29 CFR 1926 Subpart AA (\u00a71926.1200\u20131213): confined spaces in construction \u2014 requires permits, atmospheric testing, and rescue planning.",
+     "OSHA 29 CFR 1926.150: fire prevention and portable fire extinguisher requirements on job sites."
+   ],
+   formulas:["Hazard control hierarchy, most to least effective: Elimination \u2192 Substitution \u2192 Engineering controls \u2192 Administrative controls \u2192 PPE."]
+ },
+ "00102": {
+   overview:"'Introduction to Construction Math' has six real Learning Objectives, moving from whole numbers up through fractions, decimals, measuring tools, unit conversions, and finally geometry/area/volume \u2014 each building on the last. It has four hands-on Performance Tasks, all centered on actually using a tape measure in both English and metric units, including adding fractional measurements together. Because the on-screen calculator during the exam won't do unit conversions or supply formulas, memorizing the core formulas and practicing fraction-decimal conversion until automatic pays off across nearly every other module, not just this one.",
+   deepDive:[
+     {h:"LO1: Whole Numbers", p:"This objective covers the basics that everything else builds on: the key qualities of whole numbers and their place values (ones, tens, hundreds, and so on), and the four operations \u2014 adding, subtracting, multiplying, and dividing whole numbers. It's foundational rather than difficult, but it's worth being fast and accurate here since every later objective (fractions, decimals, area/volume) assumes you can do this without thinking about it.",
+      facts:[
+        "Place values read right to left: ones, tens, hundreds, thousands \u2014 the position of a digit determines its value, not just the digit itself.",
+        "Order of operations still applies in construction math problems: parentheses first, then multiplication/division, then addition/subtraction (PEMDAS)."
+      ]},
+     {h:"LO2: Fractions", p:"This objective covers equivalent fractions and how to find their lowest common denominator (LCD), converting improper fractions into mixed numbers, and adding, subtracting, multiplying, and dividing fractions. Worked example: 3/8 + 1/4. You can't add eighths and fourths directly, so convert 1/4 to eighths first (multiply top and bottom by 2, giving 2/8), then add numerators only: 3/8 + 2/8 = 5/8. The same logic applies reading a tape measure marked in 16ths \u2014 if a mark falls at 7 and 10/16, simplify it (divide top and bottom by 2) to 7 and 5/8 before writing it down, since that's how it's usually called out on a cut list.",
+      facts:[
+        "To multiply fractions: multiply numerators together, then denominators together (no common denominator needed) \u2014 1/2 \u00d7 2/3 = 2/6 = 1/3.",
+        "To divide fractions: flip the second fraction and multiply \u2014 1/2 \u00f7 1/4 = 1/2 \u00d7 4/1 = 4/2 = 2.",
+        "Improper fraction to mixed number: 9/4 \u2192 divide 9 by 4 = 2 remainder 1 \u2192 2 and 1/4.",
+        "Common construction fraction denominators are 2, 4, 8, 16, and 32 (matching standard tape measure markings)."
+      ]},
+     {h:"LO3: Decimals", p:"This objective covers decimal place values, the four operations with decimals, and \u2014 critically \u2014 converting between decimals, fractions, and percentages, since all three represent the same underlying value in different forms. 0.75 = 3/4 = 75%. Being able to move fluidly between these three forms is what actually gets tested, since a drawing might give a dimension as a decimal while your tape measure reads in fractions.",
+      facts:[
+        "Fraction \u2192 decimal: divide numerator by denominator (3/4 = 3\u00f74 = 0.75). Decimal \u2192 percentage: multiply by 100 (0.75 \u00d7 100 = 75%).",
+        "Common construction fraction/decimal pairs to memorize: 1/16=0.0625, 1/8=0.125, 3/16=0.1875, 1/4=0.25, 3/8=0.375, 1/2=0.5, 5/8=0.625, 3/4=0.75, 7/8=0.875."
+      ]},
+     {h:"LO4: Rulers & Tape Measures", p:"This objective is tested as a hands-on skill \u2014 two Performance Tasks have you measure lumber and a room-sized space using a tape measure in both English and metric units. The core content is describing English and metric rulers and tapes and using them correctly: reading to the nearest 1/16 inch on a standard English tape, and reading metric tapes in centimeters/millimeters. A third Performance Task has you determine a short inside measurement, and a fourth has you add English measurements that include fractions \u2014 so expect to actually add fractional tape readings together, not just identify what a mark means.",
+      facts:[
+        "Standard English tape measures read in 1/16-inch increments, with the longest unlabeled tick marks at each inch and progressively shorter ticks at 1/2, 1/4, 1/8, and 1/16.",
+        "Metric tapes read in millimeters and centimeters (10mm = 1cm, 100cm = 1m) \u2014 no fractions involved, which is why metric measurement is often faster to add.",
+        "For an inside measurement (like a room width), add the tape's case length (usually printed on the tape body, often 3 inches) to the reading if the tape hook is hooked against a wall."
+      ]},
+     {h:"LO5: Units & Conversions (Inch-Pound vs. Metric)", p:"This objective covers converting between inch-pound and metric units across four categories: length (inches/feet/yards vs. centimeters/meters), weight (pounds/ounces vs. kilograms/grams), volume (gallons/cubic feet vs. liters/cubic meters), and temperature (Fahrenheit vs. Celsius). The exam tests whether you know the common conversion factors (like 1 inch = 2.54 cm, or the Fahrenheit-Celsius formula) since construction materials and drawings sometimes specify one system and your tools read the other.",
+      facts:[
+        "Length: 1 inch = 2.54 cm, 1 foot = 0.3048 m, 1 yard = 0.9144 m, 1 mile = 1.609 km.",
+        "Weight: 1 pound = 0.4536 kg, 1 ounce = 28.35 g.",
+        "Volume: 1 gallon = 3.785 liters, 1 cubic foot = 28.32 liters.",
+        "Temperature: \u00b0F to \u00b0C: C = (F\u221232) \u00d7 5/9. \u00b0C to \u00b0F: F = (C \u00d7 9/5) + 32. Example: 68\u00b0F = (68\u221232)\u00d75/9 = 20\u00b0C."
+      ]},
+     {h:"LO6: Angles, Shapes, Area & Volume", p:"This objective covers listing angle types (acute = less than 90\u00b0, right = exactly 90\u00b0, obtuse = between 90\u00b0 and 180\u00b0), naming common geometric shapes and their properties, and calculating area for two-dimensional shapes and volume for three-dimensional ones. Area of a rectangle is length \u00d7 width \u2014 an 8 ft \u00d7 5 ft room is 40 sq ft. Volume of a rectangular prism (like a concrete footing) is length \u00d7 width \u00d7 height. This is also where the Pythagorean theorem (a\u00b2+b\u00b2=c\u00b2) comes in, used to verify a right angle: the 3-4-5 method has you measure 3 ft on one leg and 4 ft on the other from a corner, and if the diagonal between those points is exactly 5 ft, the corner is a true 90\u00b0. That ratio scales up (6-8-10, 9-12-15) for larger layouts.",
+      facts:[
+        "Area of a triangle: \u00bd \u00d7 base \u00d7 height. Area of a circle: \u03c0 \u00d7 r\u00b2 (\u03c0\u22483.14). Circumference of a circle: 2\u03c0r or \u03c0d.",
+        "Volume of a rectangular prism: length \u00d7 width \u00d7 height. Volume of a cylinder: \u03c0r\u00b2 \u00d7 height.",
+        "A straight angle = 180\u00b0. A full circle = 360\u00b0. Complementary angles sum to 90\u00b0; supplementary angles sum to 180\u00b0.",
+        "3-4-5 multiples for squaring larger layouts: 6-8-10, 9-12-15, 12-16-20 \u2014 same ratio, bigger numbers for bigger structures."
+      ]}
+   ],
+   objectives:[
+     "LO1: Identify whole numbers, their place values, and perform the four basic operations with them.",
+     "LO2: Calculate with fractions \u2014 equivalent fractions/LCD, improper-to-mixed conversion, and the four operations.",
+     "LO3: Calculate with decimals and convert between decimals, fractions, and percentages.",
+     "LO4: Use English and metric rulers/tape measures to measure lengths accurately (to 1/16 inch).",
+     "LO5: Convert between common inch-pound and metric units of length, weight, volume, and temperature.",
+     "LO6: Classify angles and shapes, and calculate area (2D) and volume (3D), including using the Pythagorean theorem."
+   ],
+   terms:[
+     {t:"Numerator/Denominator", d:"Top/bottom of a fraction."},
+     {t:"Lowest common denominator (LCD)", d:"The smallest shared denominator two or more fractions can be converted to before adding/subtracting."},
+     {t:"Improper fraction", d:"A fraction where the numerator is larger than the denominator (e.g., 9/4), convertible to a mixed number."},
+     {t:"Right angle", d:"Exactly 90 degrees."},
+     {t:"Acute angle", d:"An angle measuring less than 90 degrees."},
+     {t:"Obtuse angle", d:"An angle measuring more than 90 but less than 180 degrees."},
+     {t:"Pythagorean theorem", d:"a\u00b2+b\u00b2=c\u00b2, used to find an unknown side of a right triangle."},
+     {t:"3-4-5 method", d:"A practical way to check a corner is square by measuring 3 ft on one leg, 4 ft on the other, and confirming the diagonal is 5 ft."},
+     {t:"Board foot", d:"A unit of lumber volume: 1 in thick x 12 in wide x 12 in long."},
+     {t:"Inch-pound system", d:"The US customary measurement system (inches, feet, pounds, gallons) as opposed to metric."}
+   ],
+   examTips:["Practice converting fractions \u2194 decimals \u2194 percentages quickly \u2014 LO3 tests moving between all three.","Memorize area/volume formulas and key metric conversions; the exam gives you a basic calculator but not formulas.","Expect a hands-on tape-measure task \u2014 practice reading and adding fractional measurements (LO4), not just identifying marks."],
+   safety:["OSHA 29 CFR 1926 Subpart I requires layout tools (tapes, squares, levels) to be accurate and well-maintained, since measurement errors can create structural or fall hazards."],
+   formulas:[
+     "Area of a rectangle: A = l \u00d7 w",
+     "Area of a triangle: A = \u00bd \u00d7 b \u00d7 h",
+     "Area of a circle: A = \u03c0r\u00b2",
+     "Volume of a rectangular prism: V = l \u00d7 w \u00d7 h",
+     "Volume of a cylinder: V = \u03c0r\u00b2h",
+     "Pythagorean theorem: a\u00b2 + b\u00b2 = c\u00b2 (c = hypotenuse)",
+     "Percentage: (part \u00f7 whole) \u00d7 100",
+     "Unit conversions: 1 ft = 12 in; 1 yd = 3 ft"
+   ]
+ },
+ "00103": {
+   overview:"'Introduction to Hand Tools' has three real Learning Objectives: common hand tools like hammers and wrenches, measurement/layout tools, and other shop/job-site tools like saws and clamps. There's one combined Performance Task covering all three objectives \u2014 you inspect and demonstrate the safe, proper use of essentially every tool covered in the module, so this is tested hands-on as much as it's tested by exam question.",
+   deepDive:[
+     {h:"LO1: Hammers, Chisels, Screwdrivers & Wrenches", p:"This objective covers identifying various hammers and demolition tools and how to use them; describing chisels and punches and their uses; matching screwdrivers to the appropriate hardware (a Phillips head doesn't work on a flathead screw, and vice versa); and differentiating between non-adjustable, adjustable, and socket wrenches. The exam likes testing tool mix-ups here: a pipe wrench has toothed, self-tightening jaws made to bite into round pipe, while an adjustable (crescent) wrench has smooth jaws sized to flat-sided fasteners \u2014 using one where the other belongs either slips or damages the fastener. This objective also covers various types of pliers and their uses (slip-joint pliers adjust to grip a range of small objects but don't lock tightly, unlike locking pliers).",
+      facts:[
+        "Hammer types: claw hammer (drives/pulls nails), ball-peen hammer (metalwork/shaping, not for nails), sledgehammer (heavy demolition), rubber mallet (won't mar the surface being struck).",
+        "Demolition tools: pry bar/wrecking bar (leverage for prying material apart), bull point and flat chisel for concrete/masonry breaking.",
+        "Screwdriver tip types: flathead (slotted), Phillips (cross/X pattern), Torx (star pattern), Robertson (square) \u2014 using the wrong tip strips the fastener head.",
+        "Wrench types: non-adjustable/combination (fixed size, one end open, one end box/closed), adjustable/crescent (movable jaw, smooth for flat-sided fasteners), socket wrench (interchangeable sockets with a ratcheting handle for speed)."
+      ]},
+     {h:"LO2: Measurement & Layout Tools", p:"This objective covers using a variety of measuring tools correctly, plus defining various types of levels and layout tools and how they're used. A level checks both level (horizontal) and plumb (vertical) alignment. A framing square isn't just 'a ruler' \u2014 its whole purpose is laying out and verifying 90\u00b0 angles, which ties directly into Module 00102's math content on the Pythagorean theorem and the 3-4-5 method. Other layout tools like plumb bobs and chalk lines let you transfer a straight or vertical reference line across a distance without a straightedge long enough to span it.",
+      facts:[
+        "A carpenter's level typically has 3 vials: one for level (horizontal), one for plumb (vertical), and sometimes a 45\u00b0 vial for angled work.",
+        "A framing square's two arms are called the body (longer, ~24\") and the tongue (shorter, ~16\") \u2014 used together for laying out rafters, stairs, and right angles.",
+        "A chalk line snaps a straight reference line across distances too long for a straightedge; a plumb bob establishes a true vertical line using gravity and a weighted point."
+      ]},
+     {h:"LO3: Handsaws, Clamps, Files & Earth Tools", p:"This objective covers differentiating between various handsaws and their designated applications (a hacksaw's fine teeth are built for metal, not wood), identifying common clamp designs (used to hold material steady while cutting, gluing, or fastening), explaining how different files and utility knives are used with various materials, and describing shovels and picks and the tasks each is best suited for (a spade for edging vs. a round-point shovel for general digging vs. a pick for breaking up hard or rocky ground).",
+      facts:[
+        "Handsaw types: crosscut saw (cuts across the wood grain), rip saw (cuts along/with the grain), hacksaw (fine teeth for metal/plastic), coping saw (tight curves/detail cuts).",
+        "Clamp types: C-clamp (general holding), bar/pipe clamp (long reach for glue-ups), spring clamp (quick, light-duty hold), locking (vise-grip style) clamp.",
+        "Earth tools: round-point shovel (general digging), spade (flat blade, edging/cutting sod), pick (breaking hard/rocky ground before digging)."
+      ]}
+   ],
+   objectives:[
+     "LO1: Identify hammers/demolition tools, chisels/punches, screwdrivers (matched to hardware), wrenches, and pliers.",
+     "LO2: Identify measurement tools plus levels and layout tools (framing square, plumb bob, chalk line) and their uses.",
+     "LO3: Differentiate handsaws by application, identify clamp designs, and describe files/utility knives/shovels/picks.",
+     "Explain pre-use inspection: check for cracks, mushroomed striking heads, loose handles, dull/damaged edges.",
+     "Explain why a damaged hand tool must be removed from service immediately rather than used cautiously."
+   ],
+   terms:[
+     {t:"Claw hammer", d:"Drives nails (face) and pulls nails (curved claw)."},
+     {t:"Cat's paw", d:"Pulling bar for nails set flush/below the surface."},
+     {t:"Level", d:"Checks horizontal (level) or vertical (plumb) alignment."},
+     {t:"Chisel", d:"Cuts/shapes wood or metal, usually struck with a mallet."},
+     {t:"Framing square", d:"An L-shaped tool for laying out and checking right angles, often used in framing and stair layout."},
+     {t:"Pipe wrench", d:"A wrench with toothed, self-tightening jaws made specifically to grip and turn round pipe."},
+     {t:"Mushroomed head", d:"A flattened, splayed striking surface on a hammer or chisel caused by repeated impact \u2014 a rejection criterion since fragments can chip off."},
+     {t:"Hacksaw", d:"A fine-toothed hand saw used to cut metal, plastic, or other hard materials."},
+     {t:"Plumb bob", d:"A weighted point on a string used to establish a true vertical reference line."},
+     {t:"Chalk line", d:"A reel of chalk-coated string snapped against a surface to mark a straight reference line."}
+   ],
+   examTips:["Exam questions often describe a task and ask 'which tool' \u2014 know the tool's PRIMARY purpose, not just its name.","There's one combined Performance Task across all 3 LOs \u2014 expect hands-on inspection/use questions, not just definitions."],
+   safety:[
+     "OSHA 29 CFR 1926.300(a): hand tools must be maintained in a safe condition regardless of who owns them.",
+     "OSHA 29 CFR 1926.301: employers may not issue or permit use of unsafe hand tools; damaged tools must be removed from service."
+   ],
+   formulas:["Pre-use checklist: 1) select the right tool 2) inspect for cracks/mushroomed heads/loose handles 3) wear required PPE 4) use it as designed (pull wrenches, cut away from your body) 5) clean, oil, and store properly 6) pull damaged tools from service immediately."]
+ },
+ "00104": {
+   overview:"'Introduction to Power Tools' has four real Learning Objectives: drills and impact wrenches, power saws, grinders and oscillating multi-tools, and miscellaneous power tools like nailers and hydraulic jacks. There's one combined Performance Task covering all four \u2014 safely and properly demonstrating the use of a long list of specific tools (drill, hammer drill, impact driver, circular saw, jigsaw, reciprocating saw, band saw, miter/cutoff saw, table saw, grinder, oscillating multi-tool, power nailer). This is also flagged as the first module where trainees handle energized tools and equipment, so safety habits formed here are treated as setting the tone for every power-tool module afterward.",
+   deepDive:[
+     {h:"LO1: Drills & Impact Wrenches", p:"This objective starts with basic power tool safety guidelines that apply across the whole module, then covers common power drills and bits and how to use them, the difference between a hammer drill (adds a hammering action for masonry) and an impact driver (adds rotational impacts for driving fasteners, not drilling), and pneumatic drills and impact wrenches. The 'switch off before connecting power or changing bits' habit matters here specifically: some drills can begin spinning the instant they get power if the trigger was left engaged, which is exactly how fingers get caught while a bit is being swapped.",
+      facts:[
+        "Drill bit types: twist bit (general wood/metal), spade bit (fast rough wood boring), hole saw (large-diameter holes), masonry bit (carbide tip for concrete/brick).",
+        "Hammer drill = linear hammering action + rotation, for masonry/concrete. Impact driver = rotational impacts (no hammering), for driving fasteners fast without stripping them.",
+        "Pneumatic (air-powered) drills/impact wrenches need a compressor and hose, are generally lighter than corded equivalents, but add hose-whip and connection hazards."
+      ]},
+     {h:"LO2: Power Saws", p:"This objective covers circular saws and blade types, the difference between jigsaws (fine, curved cuts) and reciprocating saws (rough demolition cuts), portable band saws, the difference between miter saws (angled cross-cuts) and cutoff saws (straight cuts through metal/masonry), and table saws and the jobs they're best suited for. Kickback gets particular attention on circular saws \u2014 it happens when the blade binds in the material, throwing the saw back toward the operator, which is why the blade guard's job is limiting exposure and should never be wedged open. Reciprocating saws get flagged for demolition work specifically because cuts are often made 'blind' through a wall or floor, risking contact with hidden wiring, plumbing, or gas lines.",
+      facts:[
+        "Circular saw blade tooth count: fewer teeth (24T) = faster, rougher rip cuts; more teeth (60T+) = slower, smoother finish/crosscuts.",
+        "Jigsaw = fine, curved, detail cuts on a stationary workpiece. Reciprocating saw = rough, fast cuts, often used in demolition and can cut 'blind' through walls.",
+        "Miter saw = angled cross-cuts (for trim, framing angles). Cutoff saw (chop saw) = straight cuts through metal or masonry using an abrasive wheel.",
+        "Table saw kickback guard, riving knife, and push sticks are the three key safety features \u2014 never remove the riving knife/guard, and never place hands in line with the blade."
+      ]},
+     {h:"LO3: Grinders & Oscillating Multi-Tools", p:"This objective covers various types of grinders (angle grinders for cutting/grinding metal, bench grinders for sharpening, detail grinders for fine work) and their accessories (different wheel/disc types for different materials and tasks), plus the range of jobs an oscillating multi-tool can perform \u2014 it's a versatile tool that can cut, sand, scrape, and grind depending on the attachment used, which makes it common for detail work in tight spaces.",
+      facts:[
+        "Angle grinder discs: cutting wheel (thin, for cutting metal/masonry), grinding wheel (thicker, for smoothing/removing material), wire wheel (rust/paint removal), flap disc (finishing).",
+        "Bench grinders are stationary and typically used for sharpening tools or removing burrs \u2014 always keep the tool rest adjusted close (within 1/8 inch) to the wheel.",
+        "Oscillating multi-tool attachments include straight blades (plunge cuts), segment blades (flush cuts), sanding pads, and scrapers \u2014 the tool oscillates rather than spins, which is why it's safer for detail work near existing surfaces."
+      ]},
+     {h:"LO4: Power Nailers & Hydraulic Jacks", p:"This objective covers the specific hazards of using power nailers (accidental discharge is the main risk, which is why trigger-safety mechanisms matter and why nailers should never be pointed at another person, even 'as a joke') and the types of jobs hydraulic jacks are used for (lifting heavy loads using pressurized fluid, common in leveling, positioning, or supporting structures during repair work).",
+      facts:[
+        "Power nailer safety mechanisms: sequential trip trigger (safest \u2014 requires nose contact + trigger pull, in that order) vs. contact/bump trigger (fires on contact alone, higher risk of double-fires).",
+        "Never carry a pneumatic nailer with your finger on the trigger, and always disconnect the air supply before clearing a jam.",
+        "Hydraulic jacks are rated by tonnage capacity (e.g., 2-ton, 10-ton) \u2014 exceeding rated capacity risks seal failure and sudden load drop."
+      ]}
+   ],
+   objectives:[
+     "LO1: Identify power drills, bits, hammer drills vs. impact drivers, and pneumatic drills/impact wrenches.",
+     "LO2: Explain the use of circular saws, jigsaws, reciprocating saws, band saws, miter/cutoff saws, and table saws.",
+     "LO3: Describe jobs suited to grinders (and their accessories) and oscillating multi-tools.",
+     "LO4: Discuss power nailer hazards and jobs performed with hydraulic jacks.",
+     "Explain why a tool's guard should never be removed or defeated, even temporarily.",
+     "Recognize demolition hazards \u2014 reciprocating saws used 'blind' can strike hidden utilities."
+   ],
+   terms:[
+     {t:"Kickback", d:"Sudden backward thrust of a saw toward the operator."},
+     {t:"Pneumatic tool", d:"Powered by compressed air."},
+     {t:"Hydraulic tool", d:"Powered by pressurized fluid."},
+     {t:"Chuck", d:"The clamping mechanism that holds a drill bit."},
+     {t:"Blade guard", d:"A movable shield covering a saw blade to prevent accidental contact."},
+     {t:"Air hose whip", d:"An uncontrolled, whipping movement of a pressurized air hose if it disconnects unexpectedly."},
+     {t:"Impact driver", d:"Delivers rotational impacts for driving fasteners; distinct from a hammer drill's linear hammering action for masonry."},
+     {t:"Oscillating multi-tool", d:"A versatile tool that cuts, sands, scrapes, or grinds depending on the attachment used."}
+   ],
+   examTips:["Know the 'before you...' safety sequences (disconnect power before changing bits/blades, check switch off before plugging in).","This is the first module with energized tools \u2014 expect PPE-matching questions (face shield for grinders, eye protection for saws/drills)."],
+   safety:[
+     "OSHA 29 CFR 1926 Subpart I (\u00a71926.300\u2013305): power tool guarding, safe operation, and maintenance requirements.",
+     "OSHA 29 CFR 1926.302: specific rules for power-operated hand tools (pneumatic, fuel-powered, hydraulic).",
+     "OSHA 29 CFR 1926.303: abrasive wheel/grinder guarding and work-rest adjustment rules."
+   ],
+   formulas:["Safety sequence: disconnect the power source before changing bits/blades \u2192 confirm the switch is OFF before connecting power \u2192 confirm the blade guard is functional before cutting."]
+ },
+ "00105": {
+   overview:"'Introduction to Construction Drawings' technically has just one Learning Objective, but it breaks into five real subparts (a\u2013e): the six basic drawing components, drawing elements like lines/symbols/grid lines, how dimensions relate to scale, using engineer's and architect's scales, and the six types of construction drawings. The module includes an actual oversize residential drawing set as an appendix, and the single Performance Task has you use that real drawing set to locate a specific wall, calculate the home's overall width, find a distance between two features, determine an eave overhang, and use an architect's scale to find the garage width \u2014 so this is tested as an applied skill on a real drawing, not abstract definitions.",
+   deepDive:[
+     {h:"(a) The Six Basic Drawing Components", p:"Every construction drawing set is built from six basic components: a way of showing what the finished project should look like and how it's put together (the drawing itself), together with things like a legend of symbols, a title block, dimensions, notes, and schedules that all support reading it correctly. Learning to recognize these six components on any drawing \u2014 rather than any one specific building's drawing set \u2014 is what makes you able to read a set you've never seen before, which is exactly the situation you'll be in on a real job site.",
+      facts:[
+        "The 6 components: (1) the drawing/graphic itself, (2) title block, (3) legend/symbols key, (4) dimensions, (5) notes (general and specific), (6) schedules (tables of repeated items like doors/windows).",
+        "Title blocks are almost always in the bottom-right corner and include: project name, address, scale, date, drawn-by, and revision history."
+      ]},
+     {h:"(b) Drawing Elements: Lines, Symbols & Grid Lines", p:"Lines of construction carry real meaning: a solid line is something you'd actually see if you were standing there (an edge, a wall, a visible corner), while a dashed line represents something hidden \u2014 a beam inside a wall, a pipe beneath a slab. Symbols stand in for real objects (doors, windows, electrical outlets, plumbing fixtures) so the drawing doesn't need to draw every item literally, and a legend is the key that tells you what each symbol means on that specific drawing set. Grid lines create a coordinate system (often lettered on one axis and numbered on the other) so you can reference an exact location on the drawing \u2014 like 'column line C-4' \u2014 without needing to describe it in words.",
+      facts:[
+        "Common line types: object/solid line (visible edge), hidden/dashed line (concealed feature), centerline (long-short-long dashes, marks symmetry), dimension line (with arrows, shows a measured distance), leader line (points from a note to a specific feature).",
+        "Grid lines typically run letters (A, B, C\u2026) on one axis and numbers (1, 2, 3\u2026) on the other, so a location like 'C-4' pinpoints an exact column or intersection."
+      ]},
+     {h:"(c) & (d): Dimensions & Reading a Scale", p:"Dimensions relate to the drawing's scale, and reading that correctly is a skill you have to practice, not just memorize. If a drawing is marked \u00bc\" = 1'-0\", every \u00bc inch on the page represents 1 real foot on the actual building. So a wall measuring 2 inches on paper is 2 \u00f7 \u00bc = 8, meaning 8 feet in real life. An architect's scale is a triangular ruler with multiple scales built in specifically for this conversion, while an engineer's scale uses a different system (typically decimal-based, like 1\" = 10', 20', etc.) more common on civil/site drawings. Knowing which scale tool matches which drawing type, and being able to convert in both directions \u2014 paper distance to real distance and back \u2014 is what the exam and the Performance Task both actually test.",
+      facts:[
+        "Common architectural scales: 1/8\"=1'-0\" (whole buildings/site plans), 1/4\"=1'-0\" (floor plans), 3/8\"=1'-0\" and 1/2\"=1'-0\" (larger floor plans), 3/4\"=1'-0\" to 1\"=1'-0\" (detail drawings).",
+        "Common engineer's scales: 1\"=10', 1\"=20', 1\"=30', 1\"=40', 1\"=50', 1\"=100' \u2014 decimal-based, typically used for site/civil plans covering large areas.",
+        "An architect's scale has 11 different scales on one triangular ruler (2 per edge, one shared); an engineer's scale has 6 decimal scales, one per edge."
+      ]},
+     {h:"(e) The Six Types of Construction Drawings", p:"The module identifies six distinct types of construction drawings, each showing a different aspect of the same project: plan views (top-down, like a floor plan), elevations (straight-on exterior or interior views), section views (a sliced-through view revealing interior construction detail), detail drawings (an enlarged, close-up view of one specific assembly), and additional drawing types covering site/civil information and specialty systems (like MEP \u2014 mechanical, electrical, plumbing). Recognizing which type you're looking at tells you what kind of information to expect from it before you even start reading the details.",
+      facts:[
+        "The 6 drawing types: plan view, elevation, section view, detail drawing, schedule, and site/plot plan.",
+        "A site/plot plan shows the building's location on the property, property lines, setbacks, and often utility connection points \u2014 it's usually the first sheet in a full set."
+      ]}
+   ],
+   objectives:[
+     "Summarize the six basic components used in every construction drawing set.",
+     "Explain drawing elements: lines of construction, symbols, and grid lines, and how a legend ties them together.",
+     "Explain how dimensions relate to a drawing's scale.",
+     "Use an engineer's scale and an architect's scale to read real-world dimensions off a scaled drawing.",
+     "Identify the six types of construction drawings (plan, elevation, section, detail, and others)."
+   ],
+   terms:[
+     {t:"Plan view", d:"Top-down view, like a floor plan."},
+     {t:"Elevation", d:"Straight-on vertical exterior/interior view."},
+     {t:"Section view", d:"Sliced-through view showing interior detail."},
+     {t:"Title block", d:"Info panel (bottom-right) with project name, scale, date, revisions."},
+     {t:"MEP", d:"Mechanical, Electrical, Plumbing drawings."},
+     {t:"Legend", d:"A key explaining the symbols, line types, and abbreviations used on a drawing."},
+     {t:"Detail drawing", d:"An enlarged, close-up view of one specific part of an assembly."},
+     {t:"Architect's scale", d:"A triangular ruler with multiple fractional-inch-per-foot scales used to read dimensions off a scaled drawing."},
+     {t:"Engineer's scale", d:"A decimal-based scale (1\"=10', 20', etc.), more common on civil/site drawings than architectural ones."},
+     {t:"Grid lines", d:"A lettered/numbered coordinate system on a drawing used to reference an exact location (e.g., column line C-4)."}
+   ],
+   examTips:["The Performance Task uses a real residential drawing set \u2014 practice locating specific walls/dimensions on an actual plan, not just definitions.","Know when to use an architect's scale vs. an engineer's scale \u2014 the exam tests telling these apart."],
+   safety:["No dedicated OSHA standard governs reading drawings, but ANSI Y14 drafting conventions standardize the symbols, line types, and scale notation used industry-wide."],
+   formulas:["Reading an architect's scale: a drawing marked \u00bc\" = 1'-0\" means every \u00bc inch on the page equals 1 real-world foot \u2014 align the drawing edge to the matching scale line and read the foot marks directly."]
+ },
+ "00106": {
+   overview:"'Introduction to Basic Rigging' is an elective module with a single Learning Objective that breaks into five real subparts (a\u2013e): sling types, sling inspection, rigging hardware and its inspection, types of hoists, and rigging hitches plus the Emergency Stop hand signal. Note that no certification or competency level is awarded for this module \u2014 it's explicitly for familiarization only. The two Performance Tasks are demonstrating the proper ASME Emergency Stop hand signal, and demonstrating the ability to report a sling's load capacity or identify that it's too damaged to use.",
+   deepDive:[
+     {h:"(a) Types of Slings", p:"The module covers three sling types: synthetic (web or round), alloy steel chain, and wire rope. Each has different strengths \u2014 synthetic slings are lighter and less likely to damage a load's finish, chain slings handle heat and abrasion well, and wire rope offers high strength for heavy loads \u2014 and picking the right one for the job and load type is part of what this subpart tests.",
+      facts:[
+        "Synthetic slings: lightest, best for finished/delicate surfaces, but weakest against heat, chemicals, and UV degradation over time.",
+        "Alloy steel chain slings: best for hot, abrasive, or sharp-edged loads (foundries, rough metal); each link is individually rated and inspectable.",
+        "Wire rope slings: highest strength-to-weight for very heavy loads, but least flexible and can develop internal damage ('birdcaging') that's hard to see from outside."
+      ]},
+     {h:"(b) Sling Inspection", p:"Inspection criteria exist because sling failure is often invisible until it happens. A synthetic sling with internal fiber damage can look fine on the surface, which is why manufacturers build in a 'tattle-tail' indicator strip that visibly pulls in if the sling has been overloaded. Wire rope shows damage differently: 'birdcaging' (strands separating and bulging outward) signals the internal core has shifted or failed. Any sling showing cuts, fraying, chemical burns, or these structural signs gets pulled from service immediately \u2014 there's no 'still mostly fine' exception in rigging, because failure during a lift means a load coming down on whoever's underneath. This ties directly to one of the module's Performance Tasks: reporting a sling's capacity, or reporting that it's too damaged to use.",
+      facts:[
+        "Synthetic sling rejection signs: cuts, snags, punctures, broken/worn stitching, chemical/UV discoloration, a pulled-in tattle-tail indicator.",
+        "Chain sling rejection signs: any bent/stretched link, nicks or gouges, cracks, or evidence of heat damage (bluish discoloration).",
+        "Wire rope rejection signs: birdcaging, kinks, crushed sections, broken wires (a set number per lay length triggers rejection), corrosion."
+      ]},
+     {h:"(c) Rigging Hardware & Inspection", p:"Beyond slings, this subpart covers hardware like shackles, eyebolts, lifting clamps, and hooks \u2014 identifying each and knowing how to inspect it for damage (bent shackles, deformed eyebolts, cracked hooks) before trusting it with a load. Damaged hardware follows the same rule as damaged slings: pulled from service immediately, not used cautiously.",
+      facts:[
+        "Shackle types: anchor/bow shackle (wider bow, handles angled loads) vs. chain/D-shackle (narrower, for in-line pulls).",
+        "Always check that a shackle pin is fully seated and the correct pin for that shackle (mismatched pins are a common rejection cause).",
+        "Hook inspection checks for: throat opening (widening beyond spec = rejection), any visible crack, and a functioning safety latch."
+      ]},
+     {h:"(d) Types of Hoists", p:"This subpart covers identifying various types of hoists used in rigging \u2014 the equipment that actually lifts the load once it's rigged, ranging from simple hand-operated devices to powered hoisting systems. Knowing what each type is suited for (and its limitations) is part of basic rigging familiarization, even though this module doesn't certify you to operate any of them.",
+      facts:[
+        "Chain hoist (chain fall): hand-operated, mechanical advantage via gearing, common for shop/field lifts with no power source nearby.",
+        "Come-along (ratchet puller): hand-operated, mainly for horizontal pulling, NOT rated for vertical overhead lifting.",
+        "Electric/powered hoists: motor-driven, used for repeated or heavier lifts where speed and consistency matter."
+      ]},
+     {h:"(e) Rigging Hitches & the Emergency Stop Signal", p:"This subpart covers the three basic rigging hitches and their tradeoffs: a vertical hitch (straight from hook to load, full rated capacity, but doesn't control the load's orientation), a choker hitch (wraps the load and cinches through its own eye for better control, at reduced capacity), and a basket hitch (passes under the load with both ends on the hook, which can double rated capacity when rigged symmetrically). It also covers the ASME Emergency Stop hand signal specifically \u2014 one of the module's two Performance Tasks has you demonstrate it \u2014 and the key exam trap: ANY worker who spots a hazard during a lift can and should give the Emergency Stop signal, not only the designated signal person.",
+      facts:[
+        "Sling angle capacity loss (approximate, from horizontal): 90\u00b0 (vertical) = 100% capacity, 60\u00b0 = ~87%, 45\u00b0 = ~71%, 30\u00b0 = ~50%. Below 30\u00b0, capacity drops sharply \u2014 most riggers avoid angles under 45\u00b0.",
+        "ASME Emergency Stop hand signal: both arms extended out to the sides, palms down, moving horizontally back and forth \u2014 any worker can give it, and the operator must obey immediately.",
+        "A choker hitch's capacity is typically rated at about 75% of the sling's vertical (straight) rating due to the added stress at the choke point."
+      ]}
+   ],
+   objectives:[
+     "Identify the three sling types (synthetic, alloy steel chain, wire rope) and how to inspect each for damage.",
+     "Identify and inspect common rigging hardware (shackles, eyebolts, lifting clamps, hooks).",
+     "Identify various types of hoists used in rigging.",
+     "Identify rigging hitches (vertical, choker, basket) and demonstrate the ASME Emergency Stop hand signal.",
+     "Explain how a sling's rated capacity changes as its leg angle from horizontal decreases."
+   ],
+   terms:[
+     {t:"Choker hitch", d:"Sling wraps the load and passes through its own eye, tightening under load."},
+     {t:"Basket hitch", d:"Sling passes under the load, both ends on the hook \u2014 can double rated capacity."},
+     {t:"Vertical hitch", d:"Sling runs straight from the hook to the load with no wrap \u2014 gives the sling's full rated single-leg capacity."},
+     {t:"Come-along", d:"Hand-operated ratchet hoist for horizontal pulls only, never vertical lifting."},
+     {t:"Tattle-tail", d:"A pulled-in indicator on a synthetic sling showing it may have been overloaded and must be rejected."},
+     {t:"Shackle", d:"A connector used to join a sling to a load or to other rigging hardware."},
+     {t:"Working load limit (WLL)", d:"The maximum load a piece of rigging equipment is rated to safely lift."}
+   ],
+   examTips:["Emergency Stop signal authority is a favorite trick question \u2014 remember it's NOT limited to the designated signal person."],
+   safety:[
+     "OSHA 29 CFR 1926 Subpart CC (\u00a71926.1400\u20131442): cranes and derricks in construction, including rigging and signal-person requirements.",
+     "OSHA 29 CFR 1926.251: rigging equipment for material handling \u2014 inspection and rejection criteria for slings and hardware."
+   ],
+   formulas:[
+     "A basket hitch can rate up to 2\u00d7 the sling's single-leg vertical capacity when rigged symmetrically.",
+     "As the angle between a sling leg and the horizontal decreases, its effective lifting capacity decreases \u2014 always check the manufacturer's rated angle chart."
+   ]
+ },
+ "00107": {
+   overview:"'Basic Communication Skills' has two real Learning Objectives: the communication/listening/speaking processes, and reading/writing skills, both tied directly to job performance. There are three Performance Tasks: performing a task after listening to oral instructions, filling out a work-related form, and reading a set of instructions for donning a safety harness before orally instructing someone else on how to do it \u2014 so this module is tested as an applied communication chain (receive \u2192 understand \u2192 relay), not just vocabulary.",
+   deepDive:[
+     {h:"LO1: Communication, Listening & Speaking", p:"This objective covers the communication process itself and why listening and speaking skills connect directly to job performance, then breaks into the listening process (identifying what separates a good listener from someone who's just waiting to talk) and the speaking process (identifying what makes verbal instructions land clearly). Every communication has the same basic anatomy: a sender, a message, a channel, a receiver, and feedback that confirms the message landed correctly. Job-site miscommunication usually traces back to a break in one of those links \u2014 noise garbling the channel, jargon the receiver doesn't share, or no feedback loop closing the gap, so nobody catches the misunderstanding until the wrong thing gets built. Active listening is the receiver's half of that fix: repeating back instructions or asking a clarifying question before acting, rather than nodding along and hoping it was clear.",
+      facts:[
+        "The 5 parts of the communication process: sender \u2192 message \u2192 channel \u2192 receiver \u2192 feedback.",
+        "Active listening techniques: paraphrase back what you heard, ask clarifying questions, avoid interrupting, maintain eye contact/attention, don't plan your response while the other person is still talking.",
+        "Common speaking-clarity mistakes: using jargon the listener doesn't know, giving too many steps at once, not confirming the listener understood before walking away."
+      ]},
+     {h:"LO2: Reading & Writing on the Job", p:"This objective covers why good reading and writing skills matter for job performance, job-related reading requirements (safety data sheets, manufacturer instructions, work orders, drawings), and job-related writing requirements (incident reports, daily logs, requisition forms). Written communication earns its own emphasis because it solves a specific weakness of verbal communication: memory. A verbal instruction for a simple task is usually fine, but a complex one \u2014 multiple steps, specific measurements, sequencing that matters \u2014 is far more reliably followed when it's also written down, since it gives both sides something to check against later. This objective is tested with real applied tasks: filling out an actual work-related form, and reading a manufacturer's harness-donning instructions well enough to correctly instruct someone else how to do it \u2014 meaning you have to understand the reading well enough to translate it into clear spoken instructions.",
+      facts:[
+        "Common job-related reading materials: SDS (Safety Data Sheets), manufacturer's instructions, work orders, punch lists, construction drawings.",
+        "Common job-related writing tasks: incident/accident reports, daily logs, material requisition forms, timesheets \u2014 all of which typically become permanent project records."
+      ]}
+   ],
+   objectives:[
+     "LO1: Describe the communication process and identify good listening and speaking skills.",
+     "LO2: Describe good reading and writing skills and their relationship to job performance.",
+     "Identify common communication barriers (noise, jargon, distraction, assumptions).",
+     "Recognize nonverbal communication (body language, tone, facial expression) and its impact."
+   ],
+   terms:[
+     {t:"Active listening", d:"Fully concentrating on and understanding a speaker."},
+     {t:"Communication barrier", d:"Anything that blocks a message from being understood."},
+     {t:"Feedback", d:"Confirms a message was received/understood correctly."},
+     {t:"Nonverbal communication", d:"Body language, facial expressions, gestures, and tone that convey meaning beyond words."},
+     {t:"Jargon", d:"Technical or trade-specific terms that can confuse a listener unfamiliar with them."}
+   ],
+   examTips:["Expect an applied task-chain question: listen/read \u2192 understand \u2192 relay \u2014 not just a vocabulary definition.","Know both LO1 (listening/speaking) and LO2 (reading/writing) separately \u2014 the exam splits these two objectives."],
+   safety:[],
+   formulas:[]
+ },
+ "00108": {
+   overview:"'Basic Employability Skills' has three real Learning Objectives: opportunities in construction and how to enter the workforce, critical thinking and problem-solving, and social skills/conflict resolution/teamwork. It's a knowledge-only module with no Performance Tasks, so the exam focus stays conceptual \u2014 why each professional habit matters \u2014 rather than a physical demonstration.",
+   deepDive:[
+     {h:"LO1: Construction Business & Entering the Workforce", p:"This objective covers describing the construction business and the opportunities the trades offer, plus explaining how workers can actually enter the construction workforce \u2014 direct hire, apprenticeship, or other entry paths, tying back to what Module 00100 introduced. A resume or application in this field should highlight relevant skills, certifications, and safety training, since that's what tells an employer you understand what actually matters on a job site.",
+      facts:[
+        "Entry paths recap: direct hire (start working immediately, employer-led training), registered apprenticeship (structured, leads to journey-level), pre-apprenticeship (builds basics first).",
+        "A construction resume should lead with: safety certifications (like this Core credential), relevant tool/equipment experience, and any completed training modules \u2014 ahead of unrelated job history."
+      ]},
+     {h:"LO2: Critical Thinking & Problem-Solving", p:"This objective covers describing critical thinking and the common barriers that get in the way of solving problems (jumping to conclusions, tunnel vision, not gathering enough information first), describing how to actually solve problems using critical thinking (define the problem, gather information, weigh options, choose and act, then evaluate the result), and describing problems related to planning and scheduling \u2014 since construction work is sequenced, a scheduling problem in one place often cascades into delays elsewhere.",
+      facts:[
+        "5-step problem-solving process: (1) define the problem, (2) gather information, (3) weigh/compare options, (4) choose and act, (5) evaluate the result.",
+        "Common problem-solving barriers: jumping to conclusions before gathering facts, tunnel vision (fixating on one solution), groupthink (going along with the group instead of raising a real concern)."
+      ]},
+     {h:"LO3: Social Skills, Conflict & Teamwork", p:"This objective covers identifying good personal and social skills, explaining how to resolve conflicts with co-workers and supervisors (addressing the actual problem calmly and directly, not the person, and not letting it build up or escalating immediately), explaining how to give and receive constructive criticism (specific, focused on behavior/work rather than the person, and delivered with the intent to help), identifying workplace social issues of concern (harassment, discrimination, and similar conduct issues), and describing how to work in a team environment and be an effective leader \u2014 since a crew depends on every assigned person showing up and pulling their weight, which is why attendance and attitude often decide who stays employed more than raw skill does early on.",
+      facts:[
+        "Constructive criticism format: describe the specific behavior/work, explain the impact, suggest a specific improvement \u2014 avoid vague or personal statements.",
+        "Workplace social issues covered: harassment, discrimination, bullying \u2014 most companies require these to be reported to a supervisor or HR, not handled informally.",
+        "Effective team leadership traits: clear communication, leading by example, giving credit to the team, and addressing problems directly rather than avoiding them."
+      ]}
+   ],
+   objectives:[
+     "LO1: Describe construction business opportunities and how to enter the construction workforce.",
+     "LO2: Describe critical thinking, common problem-solving barriers, and planning/scheduling problems.",
+     "LO3: Identify social skills, conflict resolution, giving/receiving constructive criticism, workplace social issues, and teamwork/leadership.",
+     "Explain why substance-abuse awareness is part of employability in a hazardous industry."
+   ],
+   terms:[
+     {t:"Employability skills", d:"Soft skills (attitude, reliability, teamwork) employers look for beyond trade skill."},
+     {t:"Conflict resolution", d:"Calmly and constructively resolving disagreements."},
+     {t:"Dependability", d:"Consistently showing up and following through on assigned tasks, which builds employer trust."},
+     {t:"Critical thinking", d:"Objectively analyzing a problem \u2014 gathering information and weighing options \u2014 before deciding how to act."},
+     {t:"Constructive criticism", d:"Specific, behavior-focused feedback delivered with the intent to help someone improve."}
+   ],
+   examTips:["No performance test on this module \u2014 knowledge-test only, so focus on WHY each trait/practice matters to an employer.","LO2 (critical thinking/problem-solving) is often under-studied \u2014 know the basic problem-solving steps, not just LO3's social skills."],
+   safety:[],
+   formulas:[]
+ },
+ "00109": {
+   overview:"'Introduction to Material Handling' has two real Learning Objectives: basic material handling concepts/safety precautions (which includes knot tying, often overlooked), and material handling equipment (non-motorized and motorized). The two Performance Tasks are demonstrating safe manual lifting technique, and tying two of four common knots \u2014 square, bowline, half hitch, or clove hitch \u2014 so knot tying is a real tested skill here, not a side note.",
+   deepDive:[
+     {h:"LO1: Manual Lifting, Safety Precautions & Knot Tying", p:"This objective covers the basic concepts of material handling and manual lifting, common material handling safety precautions, and \u2014 less obviously \u2014 how to tie knots commonly used in material handling. The lifting technique isn't an arbitrary checklist: your lower back is strong in compression but weak against combined bending-and-twisting loads, which is exactly the motion that causes disc injuries. Bending at the knees instead of the waist keeps your spine neutral while your legs do the actual work; keeping the load close reduces the leverage working against your back; and twisting while carrying combines the load with a rotational force your spine isn't built to resist under load, which is why you turn with your feet instead. On the knot side, a square knot joins two ropes of similar diameter, a bowline forms a fixed loop that won't slip or bind under load, a half hitch is a quick, simple wrap used to secure a rope to an object, and a clove hitch grips a post or rail and resists slipping along its length \u2014 you're expected to actually tie at least two of these, not just describe them.",
+      facts:[
+        "Safe lifting steps, in order: (1) plan the lift/check the weight, (2) feet shoulder-width apart, (3) bend at the knees, (4) keep the load close, (5) keep back straight, (6) lift with your legs, (7) never twist \u2014 pivot with your feet instead.",
+        "Square knot: joins two ropes of similar diameter (also used for bandaging) \u2014 remember 'right over left, left over right.'",
+        "Bowline: forms a fixed loop that won't slip or tighten under load \u2014 commonly used for rescue or securing a line to an anchor point.",
+        "Clove hitch: quick to tie/untie, grips a post or rail well, but can slip under a shifting or specific-direction load \u2014 best for temporary securing, not critical loads.",
+        "Half hitch: simplest knot, usually used in combination with another knot (like two half hitches) for extra security."
+      ]},
+     {h:"LO2: Material Handling Equipment", p:"This objective covers non-motorized equipment (hand trucks, dollies, and similar wheeled devices for moving material without excessive manual lifting) and motorized equipment (forklifts \u2014 including rough-terrain models with deep-tread tires for uneven or unpaved ground \u2014 and other powered handling equipment) and how each is used. Rated capacity on any of this equipment isn't a suggestion \u2014 it's the tested, certified limit for that specific piece of equipment, and exceeding it risks structural failure of the equipment itself, not just dropping the load. This objective also covers the 'fall zone' \u2014 the area beneath a raised or suspended load that must stay clear of workers, since a shifting load doesn't give warning before it moves \u2014 and cross-key stacking, a technique for interlocking layers of lumber, brick, or pipe at alternating angles so a stored stack behaves like one connected unit instead of a pile that can topple.",
+      facts:[
+        "Non-motorized equipment: hand truck (2-wheeled, for boxes/appliances), dolly (flat, 4-wheeled platform), pallet jack (manual hydraulic lift for pallets).",
+        "Motorized equipment: standard forklift (warehouse/paved surfaces), rough-terrain forklift (deep-tread tires for unpaved sites), telehandler (extending boom forklift for reaching height/distance).",
+        "A forklift's data/capacity plate is required to be posted on the machine and lists its maximum rated load at a specific load center (commonly 24 inches) \u2014 loads carried further from that center reduce the safe capacity."
+      ]}
+   ],
+   objectives:[
+     "LO1: Describe manual lifting concepts, material handling safety precautions, and tie common knots (square, bowline, half hitch, clove hitch).",
+     "LO2: Identify non-motorized and motorized material handling equipment and how each is used.",
+     "Explain what a 'fall zone' is and why it must be kept clear under a suspended load.",
+     "Describe cross-key stacking for stable material storage (lumber, brick, pipe).",
+     "Explain why a forklift's rated capacity must never be exceeded."
+   ],
+   terms:[
+     {t:"Fall zone", d:"Area beneath a raised/suspended load that must stay clear of workers."},
+     {t:"Cross-key stacking", d:"Interlocking layers at an angle to improve stack stability."},
+     {t:"Rough terrain forklift", d:"Forklift with deep-tread tires for uneven/unpaved ground."},
+     {t:"Rated capacity", d:"The maximum load material handling equipment is certified to safely carry; it must never be exceeded."},
+     {t:"Hand truck", d:"A wheeled device for moving boxes or materials without excessive manual lifting."},
+     {t:"Bowline", d:"A knot that forms a fixed loop that won't slip or bind, even under load."},
+     {t:"Clove hitch", d:"A knot that grips a post or rail and resists slipping along its length."},
+     {t:"Square knot", d:"A knot used to join two ropes of similar diameter."}
+   ],
+   examTips:["Don't skip knot tying \u2014 it's one of only two Performance Tasks in this module (square, bowline, half hitch, clove hitch).","Lifting technique and fall-zone awareness are the concepts most likely to be tested on the knowledge side."],
+   safety:[
+     "OSHA 29 CFR 1926 Subpart H (\u00a71926.250\u2013251): general requirements for storage, stacking height limits, and rigging equipment used in materials handling.",
+     "OSHA 29 CFR 1926.602: material handling equipment (forklifts, etc.) must have rated capacity posted and never exceeded."
+   ],
+   formulas:["Safe lifting procedure: 1) plan the lift and check the load's weight 2) keep feet shoulder-width apart 3) bend at the knees, not the waist 4) keep the load close to your body 5) keep your back straight and lift with your legs 6) avoid twisting while carrying."]
+ }
+};
+
+var FLASHCARDS = [
+ {module:"00100",front:"What is NCCER?",back:"The National Center for Construction Education and Research \u2014 a nonprofit that creates standardized, portable construction training and credentials recognized industry-wide."},
+ {module:"00100",front:"What does 'portability' of an NCCER credential mean?",back:"Your training record follows you between employers and states through the NCCER Registry \u2014 no restarting training when you change jobs."},
+ {module:"00100",front:"Name two entry-level construction career paths.",back:"Any two of: carpenter, pipefitter, welder, electrician, crane operator."},
+ {module:"00100",front:"What is the NCCER Registry?",back:"A national database that issues transcripts, certificates, and wallet cards for completed NCCER training."},
+ {module:"00100",front:"Why does construction offer strong career growth?",back:"High demand for skilled workers, 'earn while you learn' training, and a clear path from trainee to craft professional to supervisor."},
+ {module:"00100",front:"What does 'earn while you learn' mean?",back:"You're paid a wage while you complete on-the-job training and coursework, instead of paying tuition up front."},
+ {module:"00100",front:"What is an apprenticeship?",back:"A structured program combining paid on-the-job work with related classroom instruction, usually leading to journey-level status."},
+ {module:"00100",front:"What is a pre-apprenticeship program?",back:"An entry-level program that builds basic skills before a candidate enters a formal apprenticeship."},
+ {module:"00100",front:"What is a wallet card?",back:"A card showing proof of completed NCCER training modules that a worker can present to employers."},
+ {module:"00100",front:"How does a craft professional differ from a helper?",back:"A craft professional has completed structured training/certification in a trade; a helper typically has not yet done so."},
+ {module:"00100",front:"Besides trade skills, what else does the Core curriculum prepare you for?",back:"Safety awareness, employability skills, and communication needed across every construction trade."},
+ {module:"00101",front:"What is PPE?",back:"Personal Protective Equipment \u2014 hard hats, safety glasses, gloves, hearing protection worn to reduce exposure to job-site hazards."},
+ {module:"00101",front:"What is an SDS?",back:"Safety Data Sheet \u2014 gives hazard, handling, and emergency info about a chemical product."},
+ {module:"00101",front:"What is a 'competent person' under OSHA?",back:"Someone who can identify hazards and has authority to take prompt corrective action to eliminate them."},
+ {module:"00101",front:"What are OSHA's 'Fatal Four' construction hazards?",back:"Falls, struck-by, caught-in/between, and electrocution \u2014 falls are the single largest cause of death."},
+ {module:"00101",front:"At what height does OSHA generally require fall protection in construction?",back:"6 feet or more above a lower level."},
+ {module:"00101",front:"What does the hierarchy of hazard controls prioritize first?",back:"Elimination, then substitution, engineering controls, administrative controls, and PPE last."},
+ {module:"00101",front:"What should you do first after witnessing a job-site incident?",back:"Make the scene safe, then report it to your supervisor immediately and get first aid/emergency help."},
+ {module:"00101",front:"Name the 5 fire extinguisher classes.",back:"A (ordinary combustibles), B (flammable liquids), C (electrical), D (combustible metals), K (cooking oils)."},
+ {module:"00101",front:"What is lockout/tagout (LOTO)?",back:"A procedure that de-energizes and locks equipment before maintenance so it can't be started accidentally."},
+ {module:"00101",front:"What is a confined space?",back:"A space large enough to enter and work in, with limited entry/exit, not designed for continuous occupancy \u2014 may have hazardous air."},
+ {module:"00101",front:"What is a 'qualified person' under OSHA?",back:"Someone with recognized training, credentials, or extensive knowledge/experience able to solve or resolve problems in a specific subject area."},
+ {module:"00101",front:"What does red signage typically indicate on a job site?",back:"Danger or a stop condition; yellow generally indicates caution."},
+ {module:"00101",front:"What must hazardous chemical containers have on a job site?",back:"Proper labeling with hazard information consistent with SDS/GHS requirements."},
+ {module:"00101",front:"What is a toolbox talk?",back:"A short, routine safety meeting covering a specific hazard or topic relevant to that day's work."},
+ {module:"00101",front:"Why does job-site housekeeping matter for safety?",back:"Clutter, debris, and spills create trip, slip, and fire hazards."},
+ {module:"00102",front:"Convert 3/4 to a decimal.",back:"0.75"},
+ {module:"00102",front:"Convert 0.625 to a fraction.",back:"5/8"},
+ {module:"00102",front:"Area of a rectangle formula?",back:"Area = length \u00d7 width"},
+ {module:"00102",front:"Area of a circle formula?",back:"Area = \u03c0 \u00d7 radius\u00b2"},
+ {module:"00102",front:"Volume of a rectangular prism formula?",back:"Volume = length \u00d7 width \u00d7 height"},
+ {module:"00102",front:"How many inches are in 12 feet?",back:"144 inches"},
+ {module:"00102",front:"To what fraction of an inch is a job-site tape measure usually read?",back:"1/16 inch"},
+ {module:"00102",front:"3/8 + 1/4 = ?",back:"5/8 (1/4 = 2/8, so 3/8 + 2/8 = 5/8)"},
+ {module:"00102",front:"Convert 40% to a decimal.",back:"0.40"},
+ {module:"00102",front:"What is an acute angle?",back:"An angle measuring less than 90 degrees."},
+ {module:"00102",front:"What is a right angle?",back:"An angle measuring exactly 90 degrees."},
+ {module:"00102",front:"What is the Pythagorean theorem used for on site?",back:"Finding an unknown side of a right triangle (a\u00b2+b\u00b2=c\u00b2) \u2014 used for squaring walls and layout."},
+ {module:"00102",front:"How many feet are in a yard?",back:"3 feet."},
+ {module:"00102",front:"What is the formula to calculate a percentage?",back:"(part \u00f7 whole) \u00d7 100."},
+ {module:"00103",front:"What should you always check before using a hand tool?",back:"Inspect it for damage \u2014 cracks, mushroomed heads, loose handles \u2014 never use a damaged tool."},
+ {module:"00103",front:"What is a claw hammer used for?",back:"Driving nails with the flat face and pulling nails with the curved claw."},
+ {module:"00103",front:"What is a chisel used for?",back:"Cutting and shaping wood or metal by hand, often struck with a mallet."},
+ {module:"00103",front:"Difference between slip-joint pliers and an adjustable wrench?",back:"Pliers have an adjustable pivot for gripping; an adjustable wrench has a movable jaw for turning nuts/bolts."},
+ {module:"00103",front:"What is a pipe wrench used for?",back:"Gripping and turning round pipe with toothed, self-tightening jaws."},
+ {module:"00103",front:"What is a cat's paw used for?",back:"Pulling nails that are flush with or below the wood surface."},
+ {module:"00103",front:"What is a level used for?",back:"Checking if a surface is level (horizontal) or plumb (vertical)."},
+ {module:"00103",front:"Why store hand tools properly after use?",back:"Prevents damage, rust, and tripping hazards, and keeps edges sharp."},
+ {module:"00103",front:"What is a framing square used for?",back:"Laying out and checking right angles, commonly used in framing and stair layout."},
+ {module:"00103",front:"What should you do with a mushroomed hammer head?",back:"Remove the hammer from service \u2014 a mushroomed head can chip and cause injury."},
+ {module:"00103",front:"What is a hacksaw used for?",back:"Cutting metal, plastic, or other hard materials with a fine-toothed blade."},
+ {module:"00103",front:"What is the correct way to carry a chisel?",back:"With the cutting edge pointed away from your body, sheathed if possible."},
+ {module:"00104",front:"Name the three common power sources for power tools.",back:"Electric (corded/battery), pneumatic (compressed air), hydraulic (pressurized fluid)."},
+ {module:"00104",front:"What must always be true of a circular saw's blade guard?",back:"It must remain functional \u2014 never wedge or tape it open."},
+ {module:"00104",front:"What is kickback?",back:"A sudden, forceful backward thrust of a saw toward the operator, often from a pinched blade."},
+ {module:"00104",front:"Before plugging in or battery-loading a drill, what should you check?",back:"That the trigger/switch is OFF."},
+ {module:"00104",front:"What PPE is essential for an angle grinder?",back:"Face shield or safety glasses, hearing protection, and gloves."},
+ {module:"00104",front:"Before changing a drill bit or blade, you should always:",back:"Disconnect the power source first."},
+ {module:"00104",front:"Why is a reciprocating saw risky in demolition?",back:"It's often used 'blind' and can hit hidden wiring, plumbing, or gas lines."},
+ {module:"00104",front:"What is the purpose of a guard on a power tool?",back:"To shield the operator from the cutting or moving part and reduce injury risk."},
+ {module:"00104",front:"What should you inspect on a cord before using a corded power tool?",back:"Check for cuts, fraying, or exposed wire, and confirm it is properly grounded."},
+ {module:"00104",front:"What is a common hazard of pneumatic (air-powered) tools?",back:"Unexpected air-hose whip or accidental triggering from pressurized air."},
+ {module:"00104",front:"What PPE is typically required for a circular saw?",back:"Eye protection and hearing protection at minimum."},
+ {module:"00104",front:"Why should you never remove or defeat a safety guard?",back:"It's a primary protection against contact with a moving blade or bit \u2014 removing it greatly increases injury risk."},
+ {module:"00105",front:"What is a plan view?",back:"A drawing showing a structure as viewed directly from above, like a floor plan."},
+ {module:"00105",front:"What is an elevation drawing?",back:"A straight-on vertical view of a building's exterior or interior side."},
+ {module:"00105",front:"What is a section view?",back:"A drawing showing a structure as if sliced through, revealing interior details."},
+ {module:"00105",front:"What is a title block?",back:"The section of a drawing (usually bottom-right) with project name, scale, date, and revisions."},
+ {module:"00105",front:"What is a legend on a drawing?",back:"A key explaining the symbols, line types, and abbreviations used."},
+ {module:"00105",front:"What is an architect's scale?",back:"A triangular ruler with fractional-inch-per-foot scales used to read scaled drawings."},
+ {module:"00105",front:"What does a dashed (hidden) line represent?",back:"A feature or edge concealed from view, like something behind a wall."},
+ {module:"00105",front:"What does MEP stand for?",back:"Mechanical, Electrical, and Plumbing."},
+ {module:"00105",front:"What is a detail drawing?",back:"A close-up, enlarged view showing a specific part of a construction assembly in greater clarity."},
+ {module:"00105",front:"What does a solid line generally represent on a drawing?",back:"A visible edge or feature."},
+ {module:"00105",front:"Why is the scale of a drawing important?",back:"It lets you determine real-world dimensions from the drawing's measurements."},
+ {module:"00105",front:"What is a floor plan an example of?",back:"A plan view drawing."},
+ {module:"00106",front:"Name the three main types of slings.",back:"Synthetic web/round slings, alloy steel chain slings, and wire rope slings."},
+ {module:"00106",front:"What does a pulled-in 'tattle-tail' on a sling mean?",back:"The sling was overloaded and must be removed from service immediately."},
+ {module:"00106",front:"What is a choker hitch?",back:"A hitch where the sling wraps the load and passes through its own eye, tightening under load."},
+ {module:"00106",front:"What is a basket hitch?",back:"A hitch passing under the load with both ends on the hook \u2014 can double rated capacity."},
+ {module:"00106",front:"Who can give the Emergency Stop hand signal?",back:"Anyone on the ground in sight of the operator, not just the designated signal person."},
+ {module:"00106",front:"What is a come-along?",back:"A hand-operated ratchet hoist for pulling loads horizontally \u2014 never for vertical overhead lifting."},
+ {module:"00106",front:"What is a vertical hitch?",back:"A sling attached straight from the hook to the load with no wrap \u2014 gives the sling's full rated single-leg capacity."},
+ {module:"00106",front:"What should you inspect a synthetic sling for before use?",back:"Cuts, fraying, chemical damage, and a pulled-in tattle-tail indicator."},
+ {module:"00106",front:"What is a shackle used for in rigging?",back:"Connecting slings to a load or to other lifting hardware."},
+ {module:"00106",front:"What is the working load limit (WLL)?",back:"The maximum load a piece of rigging equipment is rated to safely lift."},
+ {module:"00106",front:"What happens to a sling's rated capacity as its leg angle from horizontal decreases?",back:"Its rated lifting capacity decreases \u2014 always check the manufacturer's angle chart."},
+ {module:"00107",front:"What is active listening?",back:"Fully concentrating on and understanding a speaker, not just passively hearing them."},
+ {module:"00107",front:"What is a communication barrier?",back:"Anything that interferes with a message being sent or understood, like noise or jargon."},
+ {module:"00107",front:"Why is feedback important in workplace communication?",back:"It confirms the message was understood correctly and allows clarification."},
+ {module:"00107",front:"Why proofread written job communication?",back:"To catch errors that could cause misunderstandings, safety issues, or rework."},
+ {module:"00107",front:"What is nonverbal communication?",back:"Communication through body language, facial expressions, gestures, and tone."},
+ {module:"00107",front:"How does active listening reduce mistakes?",back:"It ensures instructions are correctly understood before acting, cutting down on rework and errors."},
+ {module:"00107",front:"Why might jargon act as a communication barrier?",back:"Unfamiliar technical terms can confuse a listener who doesn't share that background."},
+ {module:"00107",front:"Name two common communication barriers.",back:"Any two of: noise, jargon, distraction, assumptions, language differences."},
+ {module:"00107",front:"What is the goal of clear verbal communication on a job site?",back:"To make sure instructions are understood the same way by everyone, reducing errors and rework."},
+ {module:"00108",front:"What should a construction resume highlight?",back:"Relevant skills, certifications, safety training, and trade experience."},
+ {module:"00108",front:"Why does punctuality matter for employability?",back:"It signals reliability and respect for the employer and team."},
+ {module:"00108",front:"What is conflict resolution?",back:"Addressing disagreements calmly and constructively to reach a workable solution."},
+ {module:"00108",front:"Why do employers value critical thinking?",back:"It helps workers solve problems independently and adapt on site."},
+ {module:"00108",front:"Why is substance abuse awareness part of employability training?",back:"Substance use on a hazardous job site creates major safety risks for everyone."},
+ {module:"00108",front:"Why do employers value teamwork?",back:"It helps crews work efficiently and safely together, which employers see as a key soft skill."},
+ {module:"00108",front:"What is a common approach to resolving job-site conflict?",back:"Address the issue calmly and directly, focusing on the problem rather than the person."},
+ {module:"00108",front:"What kind of testing does Module 00108 use?",back:"Knowledge-test only \u2014 there is no hands-on performance profile for this module."},
+ {module:"00108",front:"Why does dependability matter to an employer?",back:"It builds trust that you'll show up, follow through, and complete assigned tasks safely."},
+ {module:"00109",front:"What is proper manual lifting technique?",back:"Keep the load close, bend at the knees not the waist, keep your back straight, lift with your legs."},
+ {module:"00109",front:"What is a 'fall zone'?",back:"The area beneath a suspended load where a falling object could strike a person \u2014 keep it clear."},
+ {module:"00109",front:"Why use cross-key stacking for lumber or brick?",back:"It interlocks each layer at an angle to the one below, improving stack stability."},
+ {module:"00109",front:"What does 'dog everything down' mean?",back:"Securing all loose items/controls before moving equipment so nothing shifts or falls."},
+ {module:"00109",front:"What is a rough terrain forklift?",back:"A forklift with deep-tread tires built to run safely on uneven, unpaved ground."},
+ {module:"00109",front:"What PPE is typical for materials handling?",back:"Gloves, steel-toe boots, back support if required, and safety glasses."},
+ {module:"00109",front:"Why should you avoid twisting while carrying a load?",back:"Twisting under load stresses the spine and significantly increases injury risk."},
+ {module:"00109",front:"What is a hand truck used for?",back:"Moving boxes or materials without excessive manual lifting."},
+ {module:"00109",front:"What must be posted on mechanical material handling equipment?",back:"Its rated capacity, which must never be exceeded."},
+ {module:"00109",front:"Why is a fall zone kept clear during a lift?",back:"To protect workers from injury if the suspended load shifts or falls."},
+ {module:"00109",front:"What is the correct full sequence for a safe manual lift?",back:"Plan the lift \u2192 feet shoulder-width apart \u2192 bend at the knees \u2192 keep the load close \u2192 keep your back straight \u2192 lift with your legs \u2192 avoid twisting while carrying."},
+ {module:"00100",front:"What is a journey-level worker?",back:"A craft professional who has completed a full apprenticeship and can work independently at full skill level."},
+ {module:"00100",front:"What is a National Registry transcript used for?",back:"Verifying to any employer which training hours and modules a worker has actually completed."},
+ {module:"00100",front:"Why might an employer prefer NCCER-trained workers?",back:"Standardized curricula mean a consistent baseline of skills and safety knowledge, no matter where the training happened."},
+ {module:"00100",front:"What does 'entry-level' mean in this module's context?",back:"A starting position requiring little to no prior experience, with training provided on the job."},
+ {module:"00100",front:"What is one advantage of an apprenticeship over being hired only as a helper?",back:"It combines structured classroom instruction with paid work, leading toward full journey-level certification."},
+ {module:"00101",front:"What is the correct first action if you spot an unsafe condition?",back:"Report it immediately so it can be corrected before someone is hurt."},
+ {module:"00101",front:"What does GHS stand for in hazard communication?",back:"Globally Harmonized System \u2014 the standard for classifying and labeling hazardous chemicals."},
+ {module:"00101",front:"Give an example of an engineering control.",back:"Installing a machine guard or ventilation system \u2014 a physical change to the workplace that removes or reduces a hazard."},
+ {module:"00101",front:"Why is an administrative control less effective than an engineering control?",back:"It relies on changing worker behavior (like scheduling or training) rather than removing the hazard itself."},
+ {module:"00102",front:"What is 1/2 + 1/3?",back:"5/6"},
+ {module:"00102",front:"Convert 5/8 to a decimal.",back:"0.625"},
+ {module:"00102",front:"What is the formula for the volume of a cylinder?",back:"V = \u03c0r\u00b2h"},
+ {module:"00102",front:"How do you convert feet to inches?",back:"Multiply the number of feet by 12."},
+ {module:"00102",front:"What angle is greater than 90\u00b0 but less than 180\u00b0?",back:"An obtuse angle."},
+ {module:"00103",front:"Which tool checks whether a surface is plumb?",back:"A level."},
+ {module:"00103",front:"Why should a wrench be pulled, not pushed, when loosening a bolt?",back:"Pulling reduces the risk of your hand slipping into equipment or striking something if the bolt suddenly gives way."},
+ {module:"00103",front:"What should you do before storing a hand tool?",back:"Clean it and inspect it, then store it in its designated place."},
+ {module:"00104",front:"What does 'double insulated' mean on a power tool?",back:"It has two layers of insulation, so it doesn't require a grounded plug for shock protection."},
+ {module:"00104",front:"Why should you never carry a power tool by its cord?",back:"It can damage the cord's insulation and create a shock hazard."},
+ {module:"00104",front:"What is the purpose of a tool's trigger lock or lockout button?",back:"Prevents accidental start-up when the tool is not in use."},
+ {module:"00105",front:"What is a schedule on a construction drawing?",back:"A table listing repeated items (like doors, windows, or fixtures) with their specifications."},
+ {module:"00105",front:"What is a revision on a drawing?",back:"A documented change made to the original drawing, tracked in the title block."},
+ {module:"00105",front:"Why must you check for the latest drawing revision before starting work?",back:"Using an outdated revision can lead to costly errors or rework."},
+ {module:"00106",front:"What is a headache ball?",back:"A weighted ball used to keep a crane's hoist line taut when no load is attached."},
+ {module:"00106",front:"What is the purpose of a signal person?",back:"To communicate lift instructions to the crane operator using standardized hand signals or radio."},
+ {module:"00106",front:"Why is wire rope inspected for 'birdcaging'?",back:"Birdcaging \u2014 strands separating and bulging out \u2014 signals internal damage and is a rejection criterion."},
+ {module:"00107",front:"What is a risk of relying only on verbal instructions for a complex task?",back:"Details can be misunderstood or forgotten without a written follow-up."},
+ {module:"00107",front:"Why is tone important in workplace communication?",back:"The same words said in a different tone can be received as helpful or confrontational."},
+ {module:"00108",front:"What is a common reason employees are let go early in a construction job?",back:"Poor attendance, unreliability, or unsafe behavior \u2014 more often than lack of skill."},
+ {module:"00108",front:"Why might an employer conduct a background check for construction hires?",back:"To confirm safety-related certifications and assess risk in a hazardous work environment."},
+ {module:"00109",front:"What should you do before lifting a heavy object together with a coworker (team lift)?",back:"Communicate the plan, then lift together on a count and move in coordination."},
+ {module:"00109",front:"Why should stacked materials never exceed a safe height?",back:"Taller, unstable stacks are more likely to topple and injure workers nearby."}
+];
+
+var QUIZ = [
+ {module:"00100",q:"What organization created the standardized Core curriculum?",choices:["OSHA","NCCER","NAHB","IBEW"],a:1,explain:"NCCER develops and standardizes construction training curricula nationwide."},
+ {module:"00100",q:"What is a key benefit of the NCCER Registry?",choices:["Free tools","Portable, trackable credentials","Guaranteed raises","Union membership"],a:1,explain:"The Registry tracks training records so credentials are portable between employers."},
+ {module:"00100",q:"What does 'earn while you learn' describe?",choices:["Paying tuition before working","Getting paid while training on the job","Working for free during training","Only classroom instruction"],a:1,explain:"Trainees are paid a wage while completing on-the-job training and coursework."},
+ {module:"00100",q:"Which entry point combines paid work with classroom instruction leading to journey-level status?",choices:["Pre-apprenticeship","Apprenticeship","Direct-hire helper role","Registry enrollment"],a:1,explain:"An apprenticeship pairs paid on-the-job work with related classroom instruction."},
+ {module:"00100",q:"What is the purpose of a wallet card?",choices:["Union membership proof","Proof of completed NCCER training","A state driver's license","An OSHA citation"],a:1,explain:"A wallet card documents completed NCCER training modules for employers."},
+ {module:"00100",q:"Which is NOT one of NCCER's advertised benefits of standardized training?",choices:["Portability between employers","A guaranteed promotion","National Registry tracking","Consistent curriculum quality"],a:1,explain:"NCCER training offers portability and consistency, but promotions are never guaranteed."},
+ {module:"00100",q:"What best defines a 'craft professional'?",choices:["Any construction worker","A skilled tradesperson with structured training","A construction company owner","A safety inspector"],a:1,explain:"A craft professional has completed structured trade training/certification."},
+ {module:"00100",q:"Module 00100 is best described as:",choices:["A heavy math module","A career orientation module","A hands-on rigging module","A power tool safety module"],a:1,explain:"00100 is an elective orientation module introducing construction careers, not a skills or safety module."},
+ {module:"00101",q:"OSHA generally requires fall protection at what height?",choices:["4 feet","6 feet","10 feet","15 feet"],a:1,explain:"Fall protection is generally required at 6 feet or more above a lower level."},
+ {module:"00101",q:"Which of OSHA's 'Fatal Four' causes the most deaths?",choices:["Electrocution","Struck-by","Falls","Caught-in/between"],a:2,explain:"Falls are the leading cause of death in construction."},
+ {module:"00101",q:"What does SDS stand for?",choices:["Site Danger Summary","Safety Data Sheet","Standard Duty Schedule","Safe Distance Standard"],a:1,explain:"SDS = Safety Data Sheet, giving hazard and handling info."},
+ {module:"00101",q:"In the hierarchy of hazard controls, which is LEAST effective?",choices:["Elimination","Engineering controls","PPE","Substitution"],a:2,explain:"PPE is the last line of defense; elimination/substitution are most effective."},
+ {module:"00101",q:"Which color typically signals a danger/stop condition on job-site signage?",choices:["Green","Red","Blue","Purple"],a:1,explain:"Red generally indicates danger or a stop condition; yellow indicates caution."},
+ {module:"00101",q:"What is a toolbox talk?",choices:["A formal OSHA inspection","A brief routine safety meeting on a specific topic","A tool inventory count","A disciplinary meeting"],a:1,explain:"Toolbox talks are short, regular meetings covering a specific hazard or topic."},
+ {module:"00101",q:"Why is job-site housekeeping considered a safety practice?",choices:["It makes the site look nice","It reduces trip, slip, and fire hazards","It's only required on union sites","It has no real safety impact"],a:1,explain:"Clutter, debris, and spills create trip, slip, and fire hazards."},
+ {module:"00101",q:"Under OSHA, what best describes a 'qualified person'?",choices:["Anyone assigned the task","Someone with recognized training or experience able to resolve problems in that area","A supervisor only","An OSHA inspector"],a:1,explain:"A qualified person has recognized credentials, training, or extensive knowledge/experience in a specific subject."},
+ {module:"00101",q:"Which extinguisher class is rated for electrical fires?",choices:["Class A","Class B","Class C","Class K"],a:2,explain:"Class C extinguishers are rated for fires involving energized electrical equipment."},
+ {module:"00101",q:"What best describes the correct order of the hazard control hierarchy?",choices:["PPE first, elimination last","Elimination first, PPE last","Administrative controls always come first","Substitution is never used"],a:1,explain:"The hierarchy runs elimination \u2192 substitution \u2192 engineering \u2192 administrative \u2192 PPE, from most to least effective."},
+ {module:"00101",q:"What should be done BEFORE performing maintenance on energized equipment?",choices:["Post a warning sign only","Perform lockout/tagout","Ask a coworker to watch it","Turn up alarm volume"],a:1,explain:"Lockout/tagout de-energizes and locks equipment so it can't start unexpectedly."},
+ {module:"00101",q:"What is required before entering a confined space?",choices:["Nothing special","Atmospheric testing and an entry permit","Verbal supervisor approval only","A fire extinguisher nearby"],a:1,explain:"Confined space entry requires atmosphere testing and a permit under OSHA rules."},
+ {module:"00102",q:"3/8 + 1/4 = ?",choices:["4/12","5/8","1/2","7/8"],a:1,explain:"1/4 = 2/8, so 3/8 + 2/8 = 5/8."},
+ {module:"00102",q:"Area of a 10 ft \u00d7 6 ft rectangle?",choices:["16 sq ft","60 sq ft","32 sq ft","600 sq ft"],a:1,explain:"Area = length \u00d7 width = 10 \u00d7 6 = 60 sq ft."},
+ {module:"00102",q:"0.75 as a fraction is:",choices:["1/4","1/2","3/4","7/5"],a:2,explain:"0.75 = 75/100 = 3/4."},
+ {module:"00102",q:"Job-site tape measures are typically read to the nearest:",choices:["1/4 inch","1/8 inch","1/16 inch","1/32 inch"],a:2,explain:"Standard tape measures are read to 1/16 inch."},
+ {module:"00102",q:"What is the area of an 8 ft \u00d7 5 ft rectangle?",choices:["13 sq ft","40 sq ft","45 sq ft","30 sq ft"],a:1,explain:"Area = length \u00d7 width = 8 \u00d7 5 = 40 sq ft."},
+ {module:"00102",q:"Using the Pythagorean theorem, if a=3 and b=4, what is c?",choices:["5","7","6","12"],a:0,explain:"a\u00b2+b\u00b2=c\u00b2, so 9+16=25, and the square root of 25 is 5."},
+ {module:"00102",q:"How many inches are there in 1 yard?",choices:["12","24","36","48"],a:2,explain:"1 yard = 3 feet = 36 inches."},
+ {module:"00102",q:"40% expressed as a decimal is:",choices:["0.04","0.4","4.0","40.0"],a:1,explain:"Percent means 'per hundred,' so 40% = 40/100 = 0.4."},
+ {module:"00103",q:"Which part of a claw hammer pulls nails?",choices:["The face","The claw","The handle","The cheek"],a:1,explain:"The curved claw grips and pulls nails."},
+ {module:"00103",q:"Before using any hand tool, you should always:",choices:["Lubricate it","Inspect it for damage","Sharpen it","Paint the handle"],a:1,explain:"Inspect for cracks/damage before use to prevent injury."},
+ {module:"00103",q:"Which tool pulls nails flush with the surface?",choices:["Cat's paw","Slip-joint pliers","Chisel","Level"],a:0,explain:"A cat's paw is a specialized pulling bar for deeply-set nails."},
+ {module:"00103",q:"What should you do with a hand tool that has a mushroomed striking head?",choices:["Keep using it carefully","Remove it from service","File it flat and reuse it","Only use it for light tasks"],a:1,explain:"A mushroomed head can chip off fragments and cause injury, so the tool must be pulled from service."},
+ {module:"00103",q:"What is the primary function of a framing square?",choices:["Measuring liquid volume","Laying out and checking right angles","Cutting metal","Tightening bolts"],a:1,explain:"A framing square is used to lay out and verify right angles, especially in framing and stair work."},
+ {module:"00103",q:"Which tool is designed specifically to grip and turn round pipe?",choices:["Slip-joint pliers","Pipe wrench","Claw hammer","Chisel"],a:1,explain:"A pipe wrench has toothed, self-tightening jaws made to grip round pipe."},
+ {module:"00103",q:"What is the safest way to carry a chisel?",choices:["Blade first toward your body","Cutting edge pointed away from your body","In your back pocket","Taped to your belt"],a:1,explain:"Carrying a chisel with the edge away from your body prevents cuts if you stumble."},
+ {module:"00104",q:"What must always be true of a circular saw blade guard?",choices:["Can be removed for speed","Must remain functional, never wedged open","Optional on cordless saws","Only matters outdoors"],a:1,explain:"The blade guard is critical and must never be disabled."},
+ {module:"00104",q:"Before changing a drill bit, first:",choices:["Increase speed setting","Disconnect the power source","Add lubricant","Put on ear protection only"],a:1,explain:"Always disconnect power before changing bits or blades."},
+ {module:"00104",q:"Which tool risks hitting hidden wiring/plumbing in demolition?",choices:["Angle grinder","Reciprocating saw","Impact driver","Air compressor"],a:1,explain:"Reciprocating saws are often used 'blind' during demolition."},
+ {module:"00104",q:"What should you check on a cord before using a corded power tool?",choices:["Color of the cord","Cuts, fraying, or exposed wire","Cord length only","Manufacturer's logo"],a:1,explain:"Cords must be inspected for damage and proper grounding before use."},
+ {module:"00104",q:"What is a common hazard specific to pneumatic tools?",choices:["Overheating","Air hose whip or unexpected triggering","Battery corrosion","Excess weight"],a:1,explain:"Pneumatic tools run on compressed air, which can cause hose whip or accidental firing if mishandled."},
+ {module:"00104",q:"Which PPE is essential when using a circular saw?",choices:["Steel-toed boots only","Eye and hearing protection","A respirator only","A fall-protection harness"],a:1,explain:"Eye and hearing protection are the minimum PPE for circular saw use."},
+ {module:"00104",q:"Why should a tool's safety guard never be removed or defeated?",choices:["It slows down cutting speed","It is a key protection against contact with the moving part","It only affects the warranty","It has no safety function"],a:1,explain:"Guards are a primary defense against contact injuries from blades or moving parts."},
+ {module:"00104",q:"Hydraulic power tools are powered by what?",choices:["Compressed air","Pressurized fluid","Electric current only","Gasoline only"],a:1,explain:"Hydraulic tools use pressurized fluid to generate force."},
+ {module:"00105",q:"A drawing showing a building sliced open to reveal interior details:",choices:["Plan view","Elevation","Section view","Schedule"],a:2,explain:"A section view reveals internal construction details."},
+ {module:"00105",q:"Where is the title block usually located?",choices:["Top-left","Center","Bottom-right","No standard location"],a:2,explain:"The title block is conventionally in the bottom-right corner."},
+ {module:"00105",q:"MEP on a drawing set refers to:",choices:["Metal, Earth, Plastic","Mechanical, Electrical, Plumbing","Measured Elevation Plan","Main Entry Point"],a:1,explain:"MEP = Mechanical, Electrical, and Plumbing."},
+ {module:"00105",q:"What type of drawing is a floor plan?",choices:["Elevation","Plan view","Section view","Detail view only"],a:1,explain:"A floor plan is a top-down plan view drawing."},
+ {module:"00105",q:"What does a solid line typically represent on a construction drawing?",choices:["A hidden/concealed feature","A visible edge","A dimension only","A revision mark"],a:1,explain:"Solid lines represent visible edges; dashed lines show hidden features."},
+ {module:"00105",q:"If a scale reads 1/4\" = 1'-0\", what does 1 inch on the drawing represent in real life?",choices:["1 foot","2 feet","4 feet","8 feet"],a:2,explain:"If 1/4 inch = 1 foot, then 1 full inch (four quarter-inches) equals 4 feet."},
+ {module:"00105",q:"What do MEP drawings show?",choices:["Structural steel only","Mechanical, Electrical, and Plumbing systems","Landscaping only","Site survey boundaries only"],a:1,explain:"MEP drawings detail mechanical, electrical, and plumbing systems."},
+ {module:"00106",q:"A pulled-in 'tattle-tail' on a sling means:",choices:["The sling is brand new","It was overloaded, remove from service","It needs cleaning","Nothing, it's decorative"],a:1,explain:"A pulled-in tattle-tail is a rejection criterion indicating overload."},
+ {module:"00106",q:"Which hitch can double a sling's rated capacity?",choices:["Vertical hitch","Choker hitch","Basket hitch","Bowline hitch"],a:2,explain:"A properly rigged basket hitch can double rated capacity."},
+ {module:"00106",q:"Who can give the Emergency Stop signal during a lift?",choices:["Only the crane operator","Only the signal person","Anyone on the ground in sight of the operator","Only a supervisor"],a:2,explain:"Anyone who spots a hazard can give the Emergency Stop signal."},
+ {module:"00106",q:"Which hitch type offers a sling's full rated single-leg capacity?",choices:["Choker hitch","Basket hitch","Vertical hitch","Double-wrap hitch"],a:2,explain:"A vertical hitch runs straight from hook to load and gives the sling's full rated capacity."},
+ {module:"00106",q:"What is a shackle used for in rigging?",choices:["Cutting wire rope","Connecting slings to a load or lifting hardware","Measuring load weight","Marking hazard zones"],a:1,explain:"A shackle is a connector piece used to join slings to loads or other hardware."},
+ {module:"00106",q:"What happens to a sling's rated capacity as its angle from horizontal decreases?",choices:["It increases","It stays the same","It decreases","It becomes unratable"],a:2,explain:"Lower sling angles reduce the effective, rated lifting capacity."},
+ {module:"00106",q:"What does WLL stand for in rigging?",choices:["Weight Load Level","Working Load Limit","Wire Length Limit","Weld Load Line"],a:1,explain:"WLL (Working Load Limit) is the maximum load equipment is rated to safely lift."},
+ {module:"00107",q:"Active listening primarily means:",choices:["Waiting for your turn to speak","Fully concentrating on and understanding the speaker","Writing down every word","Speaking louder"],a:1,explain:"Active listening is about genuine understanding, not just hearing."},
+ {module:"00107",q:"What is a communication barrier?",choices:["A helpful tool for clarity","Anything that blocks a message from being understood","A type of PPE","A written report"],a:1,explain:"Barriers like noise, jargon, or distraction interfere with understanding a message."},
+ {module:"00107",q:"Which of these is an example of nonverbal communication?",choices:["A memo","Body language and tone","A safety data sheet","A work order"],a:1,explain:"Nonverbal communication includes body language, facial expressions, and tone."},
+ {module:"00107",q:"Why can jargon act as a communication barrier?",choices:["It always sounds professional","It may confuse listeners unfamiliar with the terms","It speeds up understanding","It replaces the need for feedback"],a:1,explain:"Technical terms can confuse a listener who doesn't share that background."},
+ {module:"00107",q:"What is the purpose of feedback in communication?",choices:["To criticize the speaker","To confirm a message was received/understood correctly","To end a conversation quickly","To avoid misunderstandings by staying silent"],a:1,explain:"Feedback confirms the message was understood as intended and allows clarification."},
+ {module:"00107",q:"Why is written communication valuable on a job site?",choices:["It disappears after use","It creates a lasting, referenceable record","It replaces verbal communication entirely","It's only used for personal notes"],a:1,explain:"Written records like reports and work orders can be referenced later, reducing misunderstanding."},
+ {module:"00108",q:"Why is punctuality valued by employers?",choices:["It's required by law","It signals reliability and respect","It increases pay automatically","It has no real impact"],a:1,explain:"Being consistently on time builds trust and reflects professionalism."},
+ {module:"00108",q:"What should a construction-focused resume emphasize?",choices:["Hobbies only","Relevant skills, certifications, and safety training","Personal references only","Salary expectations"],a:1,explain:"Employers look for relevant skills, certifications, and safety training on a resume."},
+ {module:"00108",q:"What is a recommended approach to job-site conflict resolution?",choices:["Avoid the issue entirely","Address it calmly and focus on the problem, not the person","Escalate immediately to termination","Let coworkers resolve it without input"],a:1,explain:"Constructive conflict resolution stays calm and problem-focused."},
+ {module:"00108",q:"Why is substance-abuse awareness emphasized in this module?",choices:["It's unrelated to safety","Impairment significantly raises injury risk around heavy equipment and hazards","It's only a legal issue","It doesn't affect job performance"],a:1,explain:"Substance use around hazardous conditions and equipment sharply increases injury risk."},
+ {module:"00108",q:"Which of these is considered an employability 'soft skill'?",choices:["Welding certification","Teamwork and reliability","Reading blueprints","Operating a forklift"],a:1,explain:"Soft skills like teamwork and reliability are valued alongside technical trade skills."},
+ {module:"00108",q:"Module 00108 knowledge testing focuses mainly on:",choices:["Math calculations","Why professional traits and habits matter to employers","Power tool safety","Rigging hardware"],a:1,explain:"This module is knowledge-test only, focused on employability traits and their value to employers."},
+ {module:"00109",q:"What is correct manual lifting technique?",choices:["Bend at the waist, lift with your back","Bend at the knees, lift with your legs, keep load close","Twist while lifting","Hold the load far away"],a:1,explain:"Bend the knees, keep the load close, and lift with the legs."},
+ {module:"00109",q:"What is a 'fall zone' in materials handling?",choices:["The break area","The zone beneath a suspended load, kept clear","The forklift's parking spot","The loading dock only"],a:1,explain:"The fall zone must stay clear of workers in case a load drops."},
+ {module:"00109",q:"What is the correct first step in safe manual lifting?",choices:["Twist toward the load","Plan the lift and check the load's weight","Lift as fast as possible","Bend at the waist"],a:1,explain:"Planning the lift and knowing the load's weight comes before any physical lifting."},
+ {module:"00109",q:"Why should you avoid twisting while carrying a load?",choices:["It looks unprofessional","It increases stress and injury risk to the spine","It only slows you down","It has no safety impact"],a:1,explain:"Twisting under load places uneven stress on the spine, raising injury risk."},
+ {module:"00109",q:"What must never be exceeded on mechanical material handling equipment?",choices:["Its paint color code","Its rated capacity","Its serial number","Its manufacture date"],a:1,explain:"Equipment must display its rated capacity, which should never be exceeded."},
+ {module:"00109",q:"What is cross-key stacking designed to prevent?",choices:["Material theft","Stack collapse or instability","Weather damage","Overpricing"],a:1,explain:"Interlocking layers at an angle improves stability and helps prevent stack collapse."},
+ {module:"00109",q:"Which piece of equipment is best suited for uneven or unpaved ground?",choices:["Standard hand truck","Rough-terrain forklift","Pallet jack","Dolly"],a:1,explain:"Rough-terrain forklifts have deep-tread tires built for uneven, unpaved ground."},
+ {module:"00100",q:"What is a journey-level worker?",choices:["An entry-level trainee","A craft professional who completed apprenticeship training","A site supervisor only","An OSHA inspector"],a:1,explain:"Journey-level status means a worker has completed apprenticeship training and can work independently."},
+ {module:"00100",q:"What does a National Registry transcript verify?",choices:["Salary history","Completed training hours and modules","Union dues paid","Personal references"],a:1,explain:"The transcript documents which NCCER modules and hours a worker has actually completed."},
+ {module:"00100",q:"Why do employers often prefer NCCER-trained workers?",choices:["They cost less to hire","Standardized training gives a consistent skill and safety baseline","They never need further training","They are guaranteed union members"],a:1,explain:"Standardized curricula ensure a consistent baseline of skills and safety knowledge across trainees."},
+ {module:"00100",q:"Which best matches 'entry-level' as used in this module?",choices:["A senior supervisor role","A starting position with on-the-job training provided","A managerial position","A retirement package"],a:1,explain:"Entry-level roles require little prior experience, with training provided on the job."},
+ {module:"00101",q:"What does GHS stand for?",choices:["General Hazard Standard","Globally Harmonized System","Government Hazard Schedule","General Handling Safety"],a:1,explain:"GHS is the Globally Harmonized System for classifying and labeling hazardous chemicals."},
+ {module:"00101",q:"Which of these is an example of an engineering control?",choices:["Wearing gloves","Installing a machine guard","Scheduling breaks","Posting a warning sign"],a:1,explain:"Engineering controls physically remove or isolate a hazard, like a machine guard."},
+ {module:"00101",q:"Why is an administrative control considered less effective than an engineering control?",choices:["It costs more","It relies on changing worker behavior rather than removing the hazard","It only works in cold weather","It requires no training"],a:1,explain:"Administrative controls (like scheduling or training) depend on behavior, not physical hazard removal."},
+ {module:"00101",q:"What is the main role of a competent person?",choices:["Signing paychecks","Identifying hazards and correcting them with authority","Operating cranes only","Filing SDS paperwork"],a:1,explain:"A competent person can identify hazards and has authority to take corrective action."},
+ {module:"00102",q:"What is 1/2 + 1/3?",choices:["2/5","5/6","3/5","1"],a:1,explain:"Common denominator 6: 3/6 + 2/6 = 5/6."},
+ {module:"00102",q:"What is the volume of a cylinder with radius 2 ft and height 5 ft (\u03c0\u22483.14)?",choices:["\u224862.8 cu ft","\u224831.4 cu ft","\u224820 cu ft","\u2248125.6 cu ft"],a:0,explain:"V = \u03c0r\u00b2h = 3.14 \u00d7 4 \u00d7 5 \u2248 62.8 cu ft."},
+ {module:"00102",q:"Convert 12 feet to inches.",choices:["120 inches","144 inches","132 inches","156 inches"],a:1,explain:"12 ft \u00d7 12 in/ft = 144 inches."},
+ {module:"00103",q:"Which tool checks whether a surface is plumb?",choices:["Hacksaw","Level","Cat's paw","Framing square"],a:1,explain:"A level checks both level (horizontal) and plumb (vertical) alignment."},
+ {module:"00103",q:"Why should a wrench be pulled rather than pushed when loosening a bolt?",choices:["It looks more professional","It reduces the risk of your hand slipping into equipment if the bolt gives way","It requires less force","It's an OSHA color-coding rule"],a:1,explain:"Pulling keeps your hand moving away from pinch points if the bolt suddenly releases."},
+ {module:"00103",q:"What should you do before storing a hand tool?",choices:["Leave it as-is","Clean and inspect it, then store it properly","Lend it to a coworker","Paint it a bright color"],a:1,explain:"Cleaning and inspecting before storage prevents rust, damage, and hidden defects going unnoticed."},
+ {module:"00104",q:"What does 'double insulated' mean for a power tool?",choices:["It has a stronger cord","It has two layers of insulation and needs no grounded plug for shock protection","It runs on double voltage","It has two motors"],a:1,explain:"Double-insulated tools provide shock protection without requiring a grounded plug."},
+ {module:"00104",q:"Why should you never carry a power tool by its cord?",choices:["It's slower","It can damage the cord and create a shock hazard","It voids the color warranty","There's no real risk"],a:1,explain:"Carrying by the cord stresses and can damage the insulation, creating a shock hazard."},
+ {module:"00104",q:"What is the purpose of a trigger lock/lockout button on a power tool?",choices:["Increases power output","Prevents accidental start-up when not in use","Improves battery life","Reduces noise"],a:1,explain:"A trigger lock prevents the tool from starting unexpectedly while not in active use."},
+ {module:"00105",q:"What is a schedule on a construction drawing?",choices:["A project timeline","A table listing repeated items like doors/windows with specs","A safety inspection log","A change order"],a:1,explain:"A schedule lists repeated items (doors, windows, fixtures) with their specifications in table form."},
+ {module:"00105",q:"What is a revision on a drawing?",choices:["The original unedited drawing","A documented change tracked in the title block","A type of elevation view","An architect's signature"],a:1,explain:"Revisions are documented changes to a drawing, tracked in the title block."},
+ {module:"00105",q:"Why must you check for the latest drawing revision before starting work?",choices:["Older revisions are always fine","Using an outdated revision can cause costly errors or rework","Revisions don't affect construction","Only architects need to check revisions"],a:1,explain:"Working from an outdated revision can lead to mistakes that are expensive to fix."},
+ {module:"00106",q:"What is a headache ball used for?",choices:["Weighing produce","Keeping a crane's hoist line taut with no load attached","Cutting wire rope","Measuring sling angle"],a:1,explain:"A headache ball's weight keeps the hoist line taut when the crane isn't carrying a load."},
+ {module:"00106",q:"What is the role of a signal person?",choices:["Operating the crane directly","Communicating lift instructions to the operator via standardized signals","Inspecting slings only","Filling out paperwork"],a:1,explain:"The signal person relays lift instructions to the crane operator using standardized hand signals or radio."},
+ {module:"00106",q:"What does 'birdcaging' on wire rope indicate?",choices:["Normal wear","Internal damage \u2014 strands separating and bulging","A manufacturer defect covered by warranty","Proper lubrication"],a:1,explain:"Birdcaging shows internal strand damage and is a rejection criterion for wire rope."},
+ {module:"00107",q:"What is a risk of relying only on verbal instructions for a complex task?",choices:["Nothing, details are always remembered","Details can be misunderstood or forgotten without a written follow-up","It saves time with no downside","It's always clearer than writing"],a:1,explain:"Complex verbal instructions are easily misremembered without a written record to check against."},
+ {module:"00107",q:"Why does tone matter in workplace communication?",choices:["It doesn't matter, only words matter","The same words in a different tone can be received as helpful or confrontational","Tone is only relevant in written communication","Tone cannot be controlled"],a:1,explain:"Tone shapes how a message is received, even when the words themselves stay the same."},
+ {module:"00108",q:"What is a common reason employees are let go early in a construction job?",choices:["Being too skilled","Poor attendance, unreliability, or unsafe behavior","Being too experienced","Asking too many questions"],a:1,explain:"Attendance, reliability, and safe behavior are frequently bigger factors than raw skill early on."},
+ {module:"00108",q:"Why might an employer run a background check for a construction hire?",choices:["It's not related to the job","To confirm safety certifications and assess risk in hazardous work","Only for management positions","It's illegal to do so"],a:1,explain:"Background checks help confirm safety credentials given the hazardous nature of the work."},
+ {module:"00109",q:"What is important when performing a team lift with a coworker?",choices:["Each person lifts independently without communicating","Communicate the plan and lift together on a count","Only one person needs to know the plan","Lift as fast as possible"],a:1,explain:"Coordinated communication and timing prevent one person from bearing sudden unexpected weight."},
+ {module:"00109",q:"Why should stacked materials never exceed a safe height?",choices:["Taller stacks look more organized","Taller, unstable stacks are more likely to topple and injure workers","Height doesn't affect stability","It's only a space consideration"],a:1,explain:"Excessive stack height increases the risk of collapse and injury to nearby workers."}
+];
+
+var ICONS = {
+  home:'<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 9.5V19a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1V9.5"/>',
+  cards:'<rect x="3" y="8" width="14" height="13" rx="2"/><path d="M7 8V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-2"/>',
+  quiz:'<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>',
+  book:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/>'
+};
+
+function shuffle(arr){
+  var a = arr.slice();
+  for (var i=a.length-1;i>0;i--){ var j = Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; });
+}
+function highlightFacts(s){
+  var marked = String(s).replace(/(\d+-\d+-\d+|\d+\/\d+|\d[\d,]*(?:\.\d+)?%?|\u00bc|\u00bd|\u00be)/g, function(m){ return "\u0001"+m+"\u0002"; });
+  var escaped = escapeHtml(marked);
+  return escaped.replace(/\u0001/g, '<span class="hl-num">').replace(/\u0002/g, '</span>');
+}
+var SECTION_COLORS = ["var(--orange)","var(--green)","var(--blue)","var(--purple)","var(--pink)","var(--teal)","var(--amber)","var(--lime)"];
+
+var state = {
+  tab: "dashboard",
+  module: "ALL",
+  guideModule: null,
+  cameFromReference: true,
+  cardProgress: {},
+  quizStats: {},
+  sectionDone: {},
+  guideOpenSection: {},
+  cardOrder: [],
+  cardPos: 0,
+  flipped: false,
+  quizOrder: [],
+  quizPos: 0,
+  quizSelected: null,
+  quizAnswered: false,
+  sessionScore: {correct:0,total:0}
+};
+
+function loadState(){
+  try{
+    var raw = localStorage.getItem("nccerCoreProgress_v1");
+    if (raw){
+      var d = JSON.parse(raw);
+      state.cardProgress = d.cardProgress || {};
+      state.quizStats = d.quizStats || {};
+      state.sectionDone = d.sectionDone || {};
+    }
+  }catch(e){}
+}
+function saveState(){
+  try{ localStorage.setItem("nccerCoreProgress_v1", JSON.stringify({cardProgress: state.cardProgress, quizStats: state.quizStats, sectionDone: state.sectionDone})); }catch(e){}
+}
+
+function filteredCards(){
+  if (state.module==="ALL") return FLASHCARDS.map(function(c,i){ return {c:c, idx:i}; });
+  var out=[]; for (var i=0;i<FLASHCARDS.length;i++){ if (FLASHCARDS[i].module===state.module) out.push({c:FLASHCARDS[i], idx:i}); }
+  return out;
+}
+function filteredQuiz(){
+  if (state.module==="ALL") return QUIZ.map(function(q,i){ return {q:q, idx:i}; });
+  var out=[]; for (var i=0;i<QUIZ.length;i++){ if (QUIZ[i].module===state.module) out.push({q:QUIZ[i], idx:i}); }
+  return out;
+}
+function resetCardOrder(){ var f = filteredCards(); state.cardOrder = shuffle(f.map(function(x,i){return i;})); state.cardPos = 0; state.flipped = false; }
+function resetQuizOrder(){ var f = filteredQuiz(); state.quizOrder = shuffle(f.map(function(x,i){return i;})); state.quizPos = 0; state.quizSelected = null; state.quizAnswered = false; state.sessionScore = {correct:0,total:0}; }
+
+var navDepth = 0;
+function navSnapshot(){ return {tab: state.tab, module: state.module, guideModule: state.guideModule}; }
+function pushNav(){
+  navDepth++;
+  try{ history.pushState(navSnapshot(), ""); }catch(e){}
+}
+function applySnapshot(snap){
+  state.tab = snap.tab; state.module = snap.module; state.guideModule = snap.guideModule;
+  if (state.tab==="flashcards") resetCardOrder();
+  if (state.tab==="quiz") resetQuizOrder();
+}
+
+function setTab(tab){
+  state.tab = tab;
+  state.guideModule = null;
+  if (tab==="flashcards") resetCardOrder();
+  if (tab==="quiz") resetQuizOrder();
+  render();
+}
+function setModule(m){
+  state.module = m;
+  if (state.tab==="flashcards") resetCardOrder();
+  if (state.tab==="quiz") resetQuizOrder();
+  render();
+}
+function openGuide(id){
+  state.guideModule = id;
+  pushNav();
+  render();
+  window.scrollTo && window.scrollTo(0,0); document.getElementById("content").scrollTop = 0;
+}
+function goBack(){
+  if (navDepth > 0){
+    try{ history.back(); return; }catch(e){}
+  }
+  state.guideModule = null; render();
+}
+function studyModuleCards(id){ state.tab="flashcards"; state.module=id; state.guideModule=null; resetCardOrder(); pushNav(); render(); }
+function quizModule(id){ state.tab="quiz"; state.module=id; state.guideModule=null; resetQuizOrder(); pushNav(); render(); }
+
+function toggleGuideSection(moduleId, idx){
+  var cur = state.guideOpenSection[moduleId];
+  state.guideOpenSection[moduleId] = (cur === idx) ? -1 : idx;
+  render();
+}
+function toggleSectionDone(moduleId, idx, ev){
+  if (ev && ev.stopPropagation) ev.stopPropagation();
+  var key = moduleId + "_" + idx;
+  state.sectionDone[key] = !state.sectionDone[key];
+  saveState();
+  render();
+}
+
+function flipCard(){ state.flipped = !state.flipped; render(); }
+function nextCard(){ var f = filteredCards(); if (!f.length) return; state.flipped=false; state.cardPos = (state.cardPos+1) % f.length; render(); }
+function prevCard(){ var f = filteredCards(); if (!f.length) return; state.flipped=false; state.cardPos = (state.cardPos-1+f.length) % f.length; render(); }
+function markCard(status){
+  var f = filteredCards(); if (!f.length) return;
+  var item = f[state.cardOrder[state.cardPos % f.length]];
+  state.cardProgress[item.idx] = status; saveState(); nextCard();
+  showToast(status==="known" ? "Marked as known \u2705" : "Added to review pile \uD83D\uDD01");
+}
+function chooseAnswer(choiceIdx){
+  if (state.quizAnswered) return;
+  var f = filteredQuiz(); if (!f.length) return;
+  var item = f[state.quizOrder[state.quizPos % f.length]];
+  state.quizSelected = choiceIdx; state.quizAnswered = true;
+  var correct = choiceIdx === item.q.a;
+  state.sessionScore.total++; if (correct) state.sessionScore.correct++;
+  var cur = state.quizStats[item.q.module] || {correct:0,total:0};
+  cur.total++; if (correct) cur.correct++;
+  state.quizStats[item.q.module] = cur; saveState(); render();
+}
+function nextQuestion(){
+  var f = filteredQuiz(); if (!f.length) return;
+  state.quizSelected = null; state.quizAnswered = false; state.quizPos = (state.quizPos+1) % f.length; render();
+}
+function resetProgress(){
+  if (!confirm("Reset all flashcard and quiz progress? This can't be undone.")) return;
+  state.cardProgress = {}; state.quizStats = {}; state.sectionDone = {}; saveState(); render(); showToast("Progress reset");
+}
+function exportProgress(){
+  var data = JSON.stringify({cardProgress: state.cardProgress, quizStats: state.quizStats, exportedAt: new Date().toISOString()}, null, 2);
+  try{
+    var blob = new Blob([data], {type:"application/json"});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a"); a.href = url; a.download = "nccer-core-progress.json";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    showToast("Progress exported");
+  }catch(e){ showToast("Export not supported here"); }
+}
+function triggerImport(){ document.getElementById("importFile").click(); }
+function importProgress(file){
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    try{
+      var d = JSON.parse(ev.target.result);
+      state.cardProgress = d.cardProgress || {}; state.quizStats = d.quizStats || {};
+      saveState(); render(); showToast("Progress imported");
+    }catch(e){ showToast("Couldn't read that file"); }
+  };
+  reader.readAsText(file);
+}
+function showToast(msg){
+  var t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(window.__toastTimer); window.__toastTimer = setTimeout(function(){ t.classList.remove("show"); }, 1800);
+}
+
+function ring(pct, colorVar){
+  var deg = Math.round(pct*360);
+  return '<div class="ring" style="background:conic-gradient('+colorVar+' '+deg+'deg,var(--surface-2) '+deg+'deg)"><div class="ring-inner">'+Math.round(pct*100)+'%</div></div>';
+}
+
+function renderDashboard(){
+  var totalCards = FLASHCARDS.length;
+  var known = 0; Object.keys(state.cardProgress).forEach(function(k){ if (state.cardProgress[k]==="known") known++; });
+  var quizCorrect=0, quizTotal=0;
+  Object.keys(state.quizStats).forEach(function(m){ quizCorrect += state.quizStats[m].correct; quizTotal += state.quizStats[m].total; });
+
+  var html = '';
+  html += '<div class="hero"><h2>Keep building your skills \uD83D\uDC77</h2><p>10 modules \u00b7 '+FLASHCARDS.length+' flashcards \u00b7 '+QUIZ.length+' quiz questions \u00b7 full study guides</p></div>';
+  html += '<div class="section-title">Your progress</div>';
+  html += '<div class="stat-grid">';
+  html += '<div class="stat-card">'+ring(totalCards?known/totalCards:0,"var(--orange)")+'<div><div class="stat-label">Flashcards<br>Mastered</div><div class="stat-value">'+known+' / '+totalCards+'</div></div></div>';
+  html += '<div class="stat-card">'+ring(quizTotal?quizCorrect/quizTotal:0,"var(--green)")+'<div><div class="stat-label">Quiz<br>Accuracy</div><div class="stat-value">'+(quizTotal?Math.round(100*quizCorrect/quizTotal)+"%":"\u2014")+'</div></div></div>';
+  html += '</div>';
+  html += '<div class="cta-row">';
+  html += '<button class="cta" onclick="App.setTab(\'flashcards\')"><span class="icon">\uD83D\uDDC2\uFE0F</span><span class="label">Study Cards</span></button>';
+  html += '<button class="cta" onclick="App.setTab(\'quiz\')"><span class="icon">\uD83D\uDCDD</span><span class="label">Take Quiz</span></button>';
+  html += '<button class="cta" onclick="App.setTab(\'reference\')"><span class="icon">\uD83D\uDCD6</span><span class="label">Study Guide</span></button>';
+  html += '</div>';
+  html += '<div class="section-title">Progress by module</div>';
+  MODULES.forEach(function(m){
+    var cards=[]; for (var i=0;i<FLASHCARDS.length;i++){ if (FLASHCARDS[i].module===m.id) cards.push(i); }
+    var knownCount=0; cards.forEach(function(i){ if (state.cardProgress[i]==="known") knownCount++; });
+    var pct = cards.length ? knownCount/cards.length : 0;
+    var qs = state.quizStats[m.id] || {correct:0,total:0};
+    html += '<div class="mod-row" onclick="App.openGuide(\''+m.id+'\')">';
+    html += '<div class="mod-icon" style="background:'+m.color+'22">'+m.icon+'</div>';
+    html += '<div class="mod-info"><div class="mod-title">'+m.id+' \u2014 '+escapeHtml(m.title)+'</div><div class="mod-sub">'+knownCount+'/'+cards.length+' cards known</div>';
+    html += '<div class="mod-bar"><div class="mod-bar-fill" style="width:'+Math.round(pct*100)+'%;background:'+m.color+'"></div></div></div>';
+    html += '<div class="mod-score">'+(qs.total ? qs.correct+'/'+qs.total : '\u2014')+'<br><span style="font-weight:400;color:var(--text-faint)">quiz</span></div>';
+    html += '<div class="mod-chevron">\u203A</div>';
+    html += '</div>';
+  });
+  html += '<div class="footer-links">';
+  html += '<button onclick="App.exportProgress()">Export progress</button>';
+  html += '<button onclick="App.triggerImport()">Import progress</button>';
+  html += '<button onclick="App.resetProgress()">Reset progress</button>';
+  html += '</div>';
+  return html;
+}
+
+function chipRow(){
+  var html = '<div class="chiprow">';
+  html += '<div class="chip'+(state.module==="ALL"?" active":"")+'" onclick="App.setModule(\'ALL\')">All Modules</div>';
+  MODULES.forEach(function(m){
+    html += '<div class="chip'+(state.module===m.id?" active":"")+'" onclick="App.setModule(\''+m.id+'\')"><span class="dot" style="background:'+m.color+'"></span>'+m.id+'</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function renderFlashcards(){
+  var f = filteredCards();
+  var html = chipRow();
+  if (!f.length){ html += '<p style="color:var(--text-dim);text-align:center;margin-top:40px;">No cards for this module.</p>'; return html; }
+  var pos = state.cardPos % f.length;
+  var item = f[state.cardOrder[pos]];
+  var m = modInfo(item.c.module);
+  var status = state.cardProgress[item.idx];
+  html += '<div class="meta-row"><span>Card '+(pos+1)+' of '+f.length+'</span><span>'+(status ? (status==="known" ? "\u2705 known" : "\uD83D\uDD01 review") : "")+'</span></div>';
+  html += '<div class="flipcard-wrap"><div class="flipcard'+(state.flipped?" is-flipped":"")+'" onclick="App.flipCard()">';
+  html += '<div class="face front"><span class="tag" style="background:'+m.color+'22;color:'+m.color+'">'+m.icon+' '+item.c.module+'</span><div class="txt">'+escapeHtml(item.c.front)+'</div><span class="hint">Tap to reveal answer</span></div>';
+  html += '<div class="face back"><span class="tag" style="background:'+m.color+'22;color:'+m.color+'">Answer</span><div class="txt">'+escapeHtml(item.c.back)+'</div><span class="hint">Tap to flip back</span></div>';
+  html += '</div></div>';
+  html += '<div class="ctrl-row"><button class="btn" onclick="App.prevCard()">\u2190 Prev</button><button class="btn" onclick="App.flipCard()">\uD83D\uDD04 Flip</button><button class="btn" onclick="App.nextCard()">Next \u2192</button></div>';
+  html += '<div class="ctrl-row"><button class="btn btn-review btn-wide" onclick="App.markCard(\'unknown\')">\uD83D\uDD01 Still Learning</button><button class="btn btn-know btn-wide" onclick="App.markCard(\'known\')">\u2705 Know It</button></div>';
+  return html;
+}
+
+function renderQuiz(){
+  var f = filteredQuiz();
+  var html = chipRow();
+  if (!f.length){ html += '<p style="color:var(--text-dim);text-align:center;margin-top:40px;">No quiz questions for this module.</p>'; return html; }
+  var pos = state.quizPos % f.length;
+  var item = f[state.quizOrder[pos]];
+  var m = modInfo(item.q.module);
+  html += '<div class="meta-row"><span>Question '+(pos+1)+' of '+f.length+'</span><span>Score '+state.sessionScore.correct+'/'+state.sessionScore.total+'</span></div>';
+  html += '<div class="progress-track"><div class="progress-fill" style="width:'+Math.round(((pos)/f.length)*100)+'%"></div></div>';
+  html += '<div class="qcard">';
+  html += '<span class="qtag" style="background:'+m.color+'22;color:'+m.color+'">'+m.icon+' '+item.q.module+'</span>';
+  html += '<div class="qtext">'+escapeHtml(item.q.q)+'</div>';
+  item.q.choices.forEach(function(choice, idx){
+    var cls = "opt";
+    if (state.quizAnswered){ if (idx===item.q.a) cls += " correct"; else if (idx===state.quizSelected) cls += " wrong"; }
+    html += '<button class="'+cls+'" '+(state.quizAnswered?"disabled":"")+' onclick="App.chooseAnswer('+idx+')">'+escapeHtml(choice)+'</button>';
+  });
+  if (state.quizAnswered){
+    html += '<div class="explain"><b>'+(state.quizSelected===item.q.a ? "\u2705 Correct! " : "\u274C Not quite. ")+'</b>'+escapeHtml(item.q.explain)+'</div>';
+  }
+  html += '<div class="qfooter"><button class="btn btn-primary" '+(state.quizAnswered?"":"disabled")+' onclick="App.nextQuestion()">Next Question \u2192</button></div>';
+  html += '</div>';
+  return html;
+}
+
+function renderModuleGuide(id){
+  var m = modInfo(id);
+  var g = STUDY_GUIDES[id];
+  var cardCount=0; FLASHCARDS.forEach(function(c){ if (c.module===id) cardCount++; });
+  var quizCount=0; QUIZ.forEach(function(q){ if (q.module===id) quizCount++; });
+  var html = '';
+  html += '<div class="guide-hero" style="background:linear-gradient(135deg,'+m.color+' 0%,'+m.color+' 100%)">';
+  html += '<h2>'+m.icon+' '+m.id+' \u2014 '+escapeHtml(m.title)+'</h2>';
+  html += '<p>'+escapeHtml(g.overview)+'</p>';
+  html += '<div class="guide-meta"><span>\u23F1\uFE0F '+m.hours+' training hrs</span><span>'+(m.elective?"Elective module":"Core-tested module")+'</span></div>';
+  html += '</div>';
+
+  if (g.deepDive && g.deepDive.length){
+    var doneCount = 0;
+    g.deepDive.forEach(function(sec, i){ if (state.sectionDone[id+"_"+i]) doneCount++; });
+    var pct = Math.round((doneCount / g.deepDive.length) * 100);
+    var openIdx = (state.guideOpenSection[id] !== undefined) ? state.guideOpenSection[id] : 0;
+
+    html += '<div class="guide-section guide-deepdive"><h4>\uD83D\uDCD8 What You Actually Need to Know</h4>';
+    html += '<div class="dd-progress-wrap"><div class="dd-progress-track"><div class="dd-progress-fill" style="width:'+pct+'%"></div></div><div class="dd-progress-label">'+doneCount+'/'+g.deepDive.length+' done</div></div>';
+
+    g.deepDive.forEach(function(sec, i){
+      var isOpen = (openIdx === i);
+      var isDone = !!state.sectionDone[id+"_"+i];
+      var color = SECTION_COLORS[i % SECTION_COLORS.length];
+      html += '<div class="deepdive-sub'+(isDone?" is-done":"")+'">';
+      html += '<div class="dd-header" onclick="App.toggleGuideSection(\''+id+'\','+i+')">';
+      html += '<div class="dd-badge" style="background:'+color+'">'+(i+1)+'</div>';
+      html += '<h5>'+escapeHtml(sec.h)+'</h5>';
+      html += '<div class="dd-check'+(isDone?" checked":"")+'" onclick="App.toggleSectionDone(\''+id+'\','+i+',event)">\u2713</div>';
+      html += '<div class="dd-chevron'+(isOpen?" open":"")+'">\u203A</div>';
+      html += '</div>';
+      html += '<div class="dd-body'+(isOpen?" open":"")+'">';
+      html += '<p class="guide-para">'+escapeHtml(sec.p)+'</p>';
+      if (sec.facts && sec.facts.length){
+        html += '<ul class="fact-list">';
+        sec.facts.forEach(function(f){ html += '<li><span class="fact-icon">\u26A1</span><span class="fact-text">'+highlightFacts(f)+'</span></li>'; });
+        html += '</ul>';
+      }
+      html += '</div></div>';
+    });
+    html += '</div>';
+  }
+
+  if (g.objectives && g.objectives.length){
+    html += '<div class="guide-section"><h4>\uD83C\uDFAF Learning Objectives</h4><ul class="guide-list">';
+    g.objectives.forEach(function(o){ html += '<li>'+escapeHtml(o)+'</li>'; });
+    html += '</ul></div>';
+  }
+
+  if (g.terms && g.terms.length){
+    html += '<div class="guide-section"><h4>\uD83D\uDCD6 Key Terms</h4><div class="guide-terms">';
+    g.terms.forEach(function(t){ html += '<div class="term-pill"><b>'+escapeHtml(t.t)+'</b>'+escapeHtml(t.d)+'</div>'; });
+    html += '</div></div>';
+  }
+
+  if (g.formulas && g.formulas.length){
+    html += '<div class="guide-section"><h4>\uD83E\uDDEE Formulas &amp; Procedures</h4><ul class="guide-list">';
+    g.formulas.forEach(function(f){ html += '<li>'+escapeHtml(f)+'</li>'; });
+    html += '</ul></div>';
+  }
+
+  if (g.safety && g.safety.length){
+    html += '<div class="guide-section"><h4>\u26A0\uFE0F OSHA &amp; Safety Notes</h4><ul class="guide-list">';
+    g.safety.forEach(function(s){ html += '<li>'+escapeHtml(s)+'</li>'; });
+    html += '</ul></div>';
+  }
+
+  if (g.examTips && g.examTips.length){
+    html += '<div class="guide-section"><h4>\uD83D\uDCA1 Exam Tips</h4><ul class="guide-list">';
+    g.examTips.forEach(function(e){ html += '<li>'+escapeHtml(e)+'</li>'; });
+    html += '</ul></div>';
+  }
+
+  html += '<button class="btn btn-wide btn-primary" onclick="App.studyModuleCards(\''+id+'\')">\uD83D\uDDC2\uFE0F '+cardCount+' Flashcards</button>';
+  html += '<button class="btn btn-wide" onclick="App.quizModule(\''+id+'\')">\uD83D\uDCDD '+quizCount+' Quiz Qs</button>';
+  return html;
+}
+
+function renderReference(){
+  if (state.guideModule){ return renderModuleGuide(state.guideModule); }
+  var html = '<div class="exam-card"><h3>\uD83D\uDCCB Core Level Test Snapshot</h3><ul>';
+  html += '<li><b>Format:</b> Closed-book, 3-hour exam, 89 total items</li>';
+  html += '<li><b>Passing score:</b> 70 minimum</li>';
+  html += '<li><b>Calculator:</b> A basic on-screen calculator is allowed</li>';
+  html += '<li><b>Performance profiles:</b> Hands-on skill checks pair with most modules</li>';
+  html += '<li><b>Elective modules:</b> 00100 and 00106 build real skills but are not on the knowledge exam item bank</li>';
+  html += '</ul>';
+  html += '<div class="hrs-note"><b>What do the \u201chrs\u201d mean?</b> Each module lists NCCER\u2019s official <b>recommended training/contact hours</b> \u2014 roughly how long an instructor-led class (lecture + hands-on practice) takes to cover that module, per NCCER\u2019s curriculum catalog. It is NOT your personal study time \u2014 it\u2019s the classroom/lab time the program is built around. </div>';
+  html += '</div>';
+  html += '<div class="section-title">Tap a module for its full study guide</div>';
+  MODULES.forEach(function(m){
+    var cardCount=0; FLASHCARDS.forEach(function(c){ if (c.module===m.id) cardCount++; });
+    var quizCount=0; QUIZ.forEach(function(q){ if (q.module===m.id) quizCount++; });
+    html += '<div class="ref-row" style="border-left-color:'+m.color+'" onclick="App.openGuide(\''+m.id+'\')">';
+    html += '<div class="mod-icon" style="background:'+m.color+'22">'+m.icon+'</div>';
+    html += '<div style="flex:1"><div class="ref-title">'+m.id+' \u2014 '+escapeHtml(m.title)+'</div><div class="ref-sub">'+m.hours+' hrs'+(m.elective?" (elective)":"")+' \u00b7 '+cardCount+' cards \u00b7 '+quizCount+' quiz Qs</div></div>';
+    html += '<div class="mod-chevron">\u203A</div>';
+    html += '</div>';
+  });
+  return html;
+}
+
+var APPBAR = {
+  dashboard: ["NCCER Core Study", "Intro to Basic Construction Skills \u00b7 6th Ed.", "\uD83D\uDC77"],
+  flashcards: ["Flashcards", "Tap a card to flip it", "\uD83D\uDDC2\uFE0F"],
+  quiz: ["Practice Quiz", "Modeled on the Core Level Test", "\uD83D\uDCDD"],
+  reference: ["Study Guide", "Tap a module for key notes", "\uD83D\uDCD6"]
+};
+
+function render(){
+  var showBack = navDepth > 0;
+  document.getElementById("backBtn").style.display = showBack ? "inline-block" : "none";
+  document.getElementById("appbarHat").style.display = showBack ? "none" : "block";
+  if (state.tab==="reference" && state.guideModule){
+    var m = modInfo(state.guideModule);
+    document.getElementById("appbarTitle").textContent = m.id + " Study Guide";
+    document.getElementById("appbarSub").textContent = m.title;
+  } else {
+    document.getElementById("appbarTitle").textContent = APPBAR[state.tab][0];
+    document.getElementById("appbarSub").textContent = APPBAR[state.tab][1];
+    document.getElementById("appbarHat").textContent = APPBAR[state.tab][2];
+  }
+
+  var contentHtml = "";
+  if (state.tab==="dashboard") contentHtml = renderDashboard();
+  else if (state.tab==="flashcards") contentHtml = renderFlashcards();
+  else if (state.tab==="quiz") contentHtml = renderQuiz();
+  else contentHtml = renderReference();
+  document.getElementById("content").innerHTML = contentHtml;
+
+  var navs = [
+    {id:"dashboard", label:"Home", icon:ICONS.home},
+    {id:"flashcards", label:"Cards", icon:ICONS.cards},
+    {id:"quiz", label:"Quiz", icon:ICONS.quiz},
+    {id:"reference", label:"Study Guide", icon:ICONS.book}
+  ];
+  var navHtml = "";
+  navs.forEach(function(n){
+    navHtml += '<button class="navbtn'+(state.tab===n.id?" active":"")+'" onclick="App.setTab(\''+n.id+'\')"><svg viewBox="0 0 24 24">'+n.icon+'</svg>'+n.label+'</button>';
+  });
+  document.getElementById("bottomnav").innerHTML = navHtml;
+}
+
+window.App = {
+  setTab: setTab, setModule: setModule, openGuide: openGuide, goBack: goBack,
+  studyModuleCards: studyModuleCards, quizModule: quizModule,
+  flipCard: flipCard, nextCard: nextCard, prevCard: prevCard, markCard: markCard,
+  chooseAnswer: chooseAnswer, nextQuestion: nextQuestion,
+  exportProgress: exportProgress, triggerImport: triggerImport, resetProgress: resetProgress,
+  toggleGuideSection: toggleGuideSection, toggleSectionDone: toggleSectionDone
+};
+
+document.getElementById("importFile").addEventListener("change", function(e){
+  if (e.target.files[0]) importProgress(e.target.files[0]);
+  e.target.value = "";
+});
+
+window.addEventListener("popstate", function(e){
+  navDepth = Math.max(0, navDepth - 1);
+  if (e.state){
+    applySnapshot(e.state);
+  } else {
+    state.tab = "dashboard"; state.guideModule = null;
+  }
+  render();
+});
+
+loadState();
+resetCardOrder();
+resetQuizOrder();
+try{ history.replaceState(navSnapshot(), ""); }catch(e){}
+render();
+})();
+</script>
+<script data-cochat-helper="true">
+// Dark mode sync from parent
+window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'darkMode') {
+        document.documentElement.classList.toggle('dark', e.data.dark);
+    }
+});
+
+// CoChat helpers — bridge to the parent window for authenticated calls.
+// The artifact iframe has no ``allow-same-origin``, so localStorage and
+// direct same-origin fetches with auth do not work here. The parent
+// attaches the user's token, picks a model (preferring the active chat's
+// selection over a platform default), and proxies to an allow-listed
+// endpoint. If your caller wants to pin a specific model id, set
+// ``window._cochatModel = '<model-id>'`` before invoking ``cochat.ask``.
+(function() {
+    var _pending = {};
+    var _seq = 0;
+    var _BRIDGE_TIMEOUT_MS = 30000;
+
+    function _newRequestId() {
+        _seq += 1;
+        return 'cochat-' + Date.now().toString(36) + '-' + _seq.toString(36);
+    }
+
+    window.addEventListener('message', function(e) {
+        var data = e.data;
+        if (!data || data.type !== 'cochat:bridge:response') return;
+        var pending = _pending[data.requestId];
+        if (!pending) return;
+        delete _pending[data.requestId];
+        clearTimeout(pending.timer);
+        if (data.error) {
+            pending.reject(new Error(data.error));
+        } else {
+            pending.resolve(data);
+        }
+    });
+
+    function _bridge(message) {
+        return new Promise(function(resolve, reject) {
+            if (!window.parent || window.parent === window) {
+                reject(new Error('CoChat bridge unavailable: no parent window'));
+                return;
+            }
+            var requestId = _newRequestId();
+            var timer = setTimeout(function() {
+                if (_pending[requestId]) {
+                    delete _pending[requestId];
+                    reject(new Error('CoChat bridge timed out after 30s'));
+                }
+            }, _BRIDGE_TIMEOUT_MS);
+            _pending[requestId] = { resolve: resolve, reject: reject, timer: timer };
+            try {
+                window.parent.postMessage(
+                    Object.assign({ requestId: requestId }, message),
+                    '*'
+                );
+            } catch (err) {
+                delete _pending[requestId];
+                clearTimeout(timer);
+                reject(err);
+            }
+        });
+    }
+
+    window.cochat = {
+        // Call the LLM. The parent attaches auth and uses the current chat's model.
+        // Usage: const reply = await cochat.ask("What is 2+2?", {system: "..."});
+        ask: async function(prompt, options) {
+            options = options || {};
+            var model = (options && options.model) || window._cochatModel || '';
+            var resp = await _bridge({
+                type: 'cochat:ask',
+                prompt: prompt,
+                system: options.system || '',
+                model: model
+            });
+            if (resp && typeof resp.content === 'string') return resp.content;
+            return '';
+        },
+
+        // Proxied external HTTP call. Goes through /api/proxy parent-side.
+        // Usage: const r = await cochat.fetch({method:'GET', url:'https://api.example.com/x'});
+        fetch: async function(opts) {
+            opts = opts || {};
+            var resp = await _bridge({
+                type: 'cochat:proxy',
+                method: opts.method || 'GET',
+                url: opts.url || '',
+                headers: opts.headers || {},
+                body: typeof opts.body === 'string' ? opts.body : (opts.body == null ? '' : JSON.stringify(opts.body))
+            });
+            return {
+                ok: !!resp.ok,
+                status: resp.status || 0,
+                headers: resp.headers || {},
+                body: resp.body || '',
+                json: function() {
+                    try { return JSON.parse(resp.body || ''); } catch (e) { return null; }
+                }
+            };
+        }
+    };
+})();
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").catch(function (err) {
+      console.log("Service worker registration failed:", err);
+    });
+  });
+}
+</script>
+</body>
+</html>
