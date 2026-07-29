@@ -711,7 +711,7 @@ var STUDY_GUIDES = {
    formulas:["Hazard control hierarchy, most to least effective: Elimination \u2192 Substitution \u2192 Engineering controls \u2192 Administrative controls \u2192 PPE."]
  },
  "00102": {
-   overview:"'Introduction to Construction Math' has six real Learning Objectives, moving from whole numbers up through fractions, decimals, measuring tools, unit conversions, and finally geometry/area/volume \u2014 each building on the last. It has four hands-on Performance Tasks, all centered on actually using a tape measure in both English and metric units, including adding fractional measurements together. Because the on-screen calculator during the exam won't do unit conversions or supply formulas, memorizing the core formulas and practicing fraction-decimal conversion until automatic pays off across nearly every other module, not just this one.",
+   overview:"'Introduction to Construction Math' has six real Learning Objectives, moving from whole numbers up through fractions, decimals, measuring tools, unit conversions, and finally geometry/area/volume \u2014 each building on the last. It has four hands-on Performance Tasks, all centered on actually using a tape measure in both English and metric units, including adding fractional measurements together. If math isn't your strong suit, don't skip past this one \u2014 three extra sections below slow the hardest parts (fractions, decimal/percent conversion, area/volume/3-4-5) down into individual steps with nothing assumed. Because the on-screen calculator during the exam won't do unit conversions or supply formulas, memorizing the core formulas and practicing fraction-decimal conversion until automatic pays off across nearly every other module, not just this one.",
    deepDive:[
      {h:"LO1: Whole Numbers", p:"This objective covers the basics that everything else builds on: the key qualities of whole numbers and their place values (ones, tens, hundreds, and so on), and the four operations \u2014 adding, subtracting, multiplying, and dividing whole numbers. It's foundational rather than difficult, but it's worth being fast and accurate here since every later objective (fractions, decimals, area/volume) assumes you can do this without thinking about it.",
       facts:[
@@ -749,6 +749,31 @@ var STUDY_GUIDES = {
         "Volume of a rectangular prism: length \u00d7 width \u00d7 height. Volume of a cylinder: \u03c0r\u00b2 \u00d7 height.",
         "A straight angle = 180\u00b0. A full circle = 360\u00b0. Complementary angles sum to 90\u00b0; supplementary angles sum to 180\u00b0.",
         "3-4-5 multiples for squaring larger layouts: 6-8-10, 9-12-15, 12-16-20 \u2014 same ratio, bigger numbers for bigger structures."
+      ]},
+     {h:"\uD83D\uDD01 Extra Help: Adding Fractions, One Step at a Time", p:"If fractions still feel shaky, this is the exact same method from LO2, just broken into individual steps with nothing skipped. Follow this same order every single time and you'll get it right, no matter what the two fractions are.",
+      facts:[
+        "Step 1: Look at the bottom numbers (denominators). Are they the same? If yes, skip straight to Step 4.",
+        "Step 2: If they're different, find a number both denominators divide into evenly. For 1/4 and 1/6, that number is 12 (since 4\u00d73=12 and 6\u00d72=12).",
+        "Step 3: Multiply the top AND bottom of each fraction by whatever makes its denominator match that number. 1/4 \u00d7 3/3 = 3/12. 1/6 \u00d7 2/2 = 2/12.",
+        "Step 4: Now that the bottoms match, add ONLY the top numbers. Keep the bottom number the same. 3/12 + 2/12 = 5/12.",
+        "Step 5: Check if the answer simplifies (can top and bottom both divide by the same number?). 5/12 can't be reduced further, so that's the final answer.",
+        "Try it again on your own: 1/3 + 1/6. Common denominator is 6. 1/3 becomes 2/6. Then 2/6 + 1/6 = 3/6, which simplifies down to 1/2."
+      ]},
+     {h:"\uD83D\uDD01 Extra Help: Decimals, Fractions & Percents Without the Mystery", p:"These three (decimals, fractions, percents) are just three different ways of writing the exact same value. Once you can slide between them, a lot of the confusion disappears \u2014 here's the plain step-by-step for each direction.",
+      facts:[
+        "Fraction \u2192 decimal: divide the top number by the bottom number. 3 \u00f7 4 = 0.75. That's it, one division.",
+        "Decimal \u2192 percent: move the decimal point 2 spaces to the RIGHT and add a % sign. 0.75 becomes 75%.",
+        "Percent \u2192 decimal: move the decimal point 2 spaces to the LEFT and drop the % sign. 75% becomes 0.75.",
+        "Decimal \u2192 fraction: write it over 100 (or 10, or 1000 depending on the decimal places), then simplify. 0.75 = 75/100, and dividing top and bottom by 25 gives 3/4.",
+        "Memory trick: percent is just 'decimal moved 2 spots bigger-looking.' Going decimal\u2192percent, move RIGHT. Going percent\u2192decimal, move LEFT \u2014 opposite direction, same 2 spaces."
+      ]},
+     {h:"\uD83D\uDD01 Extra Help: Area, Volume & 3-4-5, Slowed Down", p:"These three ideas get lumped together because they all just mean 'multiply a couple of measurements together' \u2014 the hard part is usually remembering WHICH numbers to multiply, not the multiplication itself.",
+      facts:[
+        "Area = how much FLAT space something covers. For a rectangle: multiply the two side lengths. A 10 ft \u00d7 8 ft room: 10 \u00d7 8 = 80 square feet. Only two numbers, always multiplied together.",
+        "Volume = how much space is INSIDE a 3D shape (like a box or a footing). Multiply all three measurements. A box 4 ft long, 3 ft wide, 2 ft tall: 4 \u00d7 3 \u00d7 2 = 24 cubic feet. Three numbers this time, not two.",
+        "3-4-5 method, one step at a time: (1) from the corner you're checking, measure exactly 3 feet along one wall and mark it. (2) From that SAME corner, measure exactly 4 feet along the other wall and mark it.",
+        "(3) Measure the straight-line distance between your two marks. If it lands on exactly 5 feet, the corner is a true 90\u00b0 angle. If it's more or less than 5 feet, the corner isn't square yet and needs adjusting.",
+        "For a bigger wall, multiply all three numbers (3, 4, 5) by the same amount \u2014 6-8-10 or 9-12-15 work identically, just at a bigger scale."
       ]}
    ],
    objectives:[
@@ -1240,6 +1265,16 @@ var FLASHCARDS = [
  {module:"00102",front:"What is the formula for the volume of a cylinder?",back:"V = \u03c0r\u00b2h"},
  {module:"00102",front:"How do you convert feet to inches?",back:"Multiply the number of feet by 12."},
  {module:"00102",front:"What angle is greater than 90\u00b0 but less than 180\u00b0?",back:"An obtuse angle."},
+ {module:"00102",front:"(Easy) What is 1/4 + 1/4?",back:"2/4, which simplifies to 1/2."},
+ {module:"00102",front:"(Easy) What is 0.5 written as a fraction?",back:"1/2"},
+ {module:"00102",front:"(Easy) What is 1/2 written as a percent?",back:"50%"},
+ {module:"00102",front:"(Easy) What is 10 + 15?",back:"25"},
+ {module:"00102",front:"(Easy) What is 6 \u00d7 4?",back:"24"},
+ {module:"00102",front:"(Easy) How do you find the area of a rectangle?",back:"Multiply length by width."},
+ {module:"00102",front:"(Easy) What is 3/4 minus 1/4?",back:"2/4, which simplifies to 1/2."},
+ {module:"00102",front:"(Easy) What does it mean to 'simplify' a fraction?",back:"Divide the top and bottom by the same number until it can't be reduced any further."},
+ {module:"00102",front:"(Easy) What is 0.25 written as a percent?",back:"25% \u2014 just move the decimal point 2 spaces right."},
+ {module:"00102",front:"(Easy) In the 3-4-5 method, what does a 5 ft diagonal tell you?",back:"That the corner is a true, perfectly square 90\u00b0 angle."},
  {module:"00103",front:"Which tool checks whether a surface is plumb?",back:"A level."},
  {module:"00103",front:"Why should a wrench be pulled, not pushed, when loosening a bolt?",back:"Pulling reduces the risk of your hand slipping into equipment or striking something if the bolt suddenly gives way."},
  {module:"00103",front:"What should you do before storing a hand tool?",back:"Clean it and inspect it, then store it in its designated place."},
@@ -1289,6 +1324,12 @@ var QUIZ = [
  {module:"00102",q:"Using the Pythagorean theorem, if a=3 and b=4, what is c?",choices:["5","7","6","12"],a:0,explain:"a\u00b2+b\u00b2=c\u00b2, so 9+16=25, and the square root of 25 is 5."},
  {module:"00102",q:"How many inches are there in 1 yard?",choices:["12","24","36","48"],a:2,explain:"1 yard = 3 feet = 36 inches."},
  {module:"00102",q:"40% expressed as a decimal is:",choices:["0.04","0.4","4.0","40.0"],a:1,explain:"Percent means 'per hundred,' so 40% = 40/100 = 0.4."},
+ {module:"00102",q:"(Easy) 1/4 + 1/4 equals:",choices:["1/2","1/8","2/8 unsimplified only","1"],a:0,explain:"1/4 + 1/4 = 2/4, and 2/4 simplifies down to 1/2."},
+ {module:"00102",q:"(Easy) 0.25 written as a fraction is:",choices:["1/2","1/4","1/3","3/4"],a:1,explain:"0.25 = 25/100, which simplifies to 1/4."},
+ {module:"00102",q:"(Easy) 50% written as a decimal is:",choices:["0.5","5.0","0.05","50.0"],a:0,explain:"Move the decimal point 2 spaces left: 50% \u2192 0.50, or 0.5."},
+ {module:"00102",q:"(Easy) The area of a 6 ft \u00d7 4 ft rectangle is:",choices:["10 sq ft","24 sq ft","20 sq ft","12 sq ft"],a:1,explain:"Area = length \u00d7 width = 6 \u00d7 4 = 24 sq ft."},
+ {module:"00102",q:"(Easy) 3/4 minus 1/4 equals:",choices:["1/2","1/4","1/8","1"],a:0,explain:"3/4 \u2212 1/4 = 2/4, which simplifies to 1/2."},
+ {module:"00102",q:"(Easy) In the 3-4-5 method, if two legs measure 3 ft and 4 ft, a true right angle means the diagonal equals:",choices:["4 ft","5 ft","3 ft","7 ft"],a:1,explain:"3-4-5 is a fixed ratio \u2014 if the first two legs are 3 ft and 4 ft, a true 90\u00b0 corner always has a 5 ft diagonal."},
  {module:"00103",q:"Which part of a claw hammer pulls nails?",choices:["The face","The claw","The handle","The cheek"],a:1,explain:"The curved claw grips and pulls nails."},
  {module:"00103",q:"Before using any hand tool, you should always:",choices:["Lubricate it","Inspect it for damage","Sharpen it","Paint the handle"],a:1,explain:"Inspect for cracks/damage before use to prevent injury."},
  {module:"00103",q:"Which tool pulls nails flush with the surface?",choices:["Cat's paw","Slip-joint pliers","Chisel","Level"],a:0,explain:"A cat's paw is a specialized pulling bar for deeply-set nails."},
